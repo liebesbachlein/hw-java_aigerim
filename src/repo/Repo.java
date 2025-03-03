@@ -7,7 +7,7 @@ public interface Repo<T> {
 
     public List<T> getAll();
 
-    public void save(T item);
+    public T save(T item);
 
     public boolean delete(int id);
 }

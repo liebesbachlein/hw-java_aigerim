@@ -2,15 +2,14 @@ package repo;
 
 import model.Reservation;
 
+import java.io.*;
 import java.util.*;
 
 public class ReservationRepo implements Repo<Reservation> {
     private final Map<Integer, Reservation> idToReservation;
-    private final Map<Integer, List<Reservation>> spaceIdToReservation;
 
     public ReservationRepo() {
         idToReservation = new HashMap<>();
-        spaceIdToReservation = new HashMap<>();
     }
 
     @Override
@@ -19,9 +18,11 @@ public class ReservationRepo implements Repo<Reservation> {
     }
 
     public List<Reservation> findBySpaceId(int id) {
-        List<Reservation> res = spaceIdToReservation.get(id);
-        if (res == null) return new ArrayList<Reservation>();
-        return res;
+        List<Reservation> foundReservations = new ArrayList<>();
+        for (Reservation reservation : idToReservation.values()) {
+            if (reservation.getSpace().getId() == id) foundReservations.add(reservation);
+        }
+        return foundReservations;
     }
 
     @Override
@@ -30,34 +31,28 @@ public class ReservationRepo implements Repo<Reservation> {
     }
 
     public Map<Integer, List<Reservation>> getSpaceIdToReservation() {
+        Map<Integer, List<Reservation>> spaceIdToReservation = new HashMap<>();
+        for (Reservation reservation : idToReservation.values()) {
+            int spaceId = reservation.getSpace().getId();
+            if (spaceIdToReservation.containsKey(spaceId)) {
+                spaceIdToReservation.get(spaceId).add(reservation);
+            } else {
+                List<Reservation> list = new ArrayList<>();
+                list.add(reservation);
+                spaceIdToReservation.put(spaceId, list);
+            }
+        }
         return spaceIdToReservation;
     }
 
     @Override
-    public void save(Reservation item) {
-        idToReservation.put(item.getId(), item);
-
-        if(spaceIdToReservation.containsKey(item.getSpace().getId())) {
-            spaceIdToReservation.get(item.getSpace().getId()).add(item);
-        } else {
-            List<Reservation> list = new ArrayList<>();
-            list.add(item);
-            spaceIdToReservation.put(item.getSpace().getId(), list);
-        }
+    public Reservation save(Reservation item) {
+        return idToReservation.put(item.getId(), item);
     }
 
     @Override
     public boolean delete(int id) {
-        Reservation reservation = idToReservation.remove(id);
-        if (reservation == null) return false;
-
-        List<Reservation> reservations = spaceIdToReservation.get(reservation.getSpace().getId());
-        reservations.remove(reservation);
-
-        if (reservations.isEmpty()) {
-            spaceIdToReservation.remove(reservation.getSpace().getId());
-        }
-
+        if (idToReservation.remove(id) == null) return false;
         return true;
     }
 }

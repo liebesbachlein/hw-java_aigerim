@@ -65,7 +65,7 @@ public class Validator {
     }
 
     public static String onStartEndHours(String startHour, String endHour) {
-        if (!Validator.onHourNumber(startHour).isEmpty() || !Validator.onHourNumber(endHour).isEmpty())
+        if (!Validator.onHourNumber(startHour).isBlank() || !Validator.onHourNumber(endHour).isBlank())
             return "(!) Invalid Start or/and End Hour";
         if (Integer.parseInt(startHour) >= Integer.parseInt(endHour))
             return "(!) End Hour must be bigger than Start Hour";

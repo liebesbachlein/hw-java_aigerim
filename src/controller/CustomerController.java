@@ -67,21 +67,21 @@ public class CustomerController extends Controller {
 
         String errorMessage = validateReservationInput(name, spaceId, date, startHour, endHour);
 
-        if(!errorMessage.isEmpty()) {
-            System.out.print(errorMessage);
-            return;
-        }
+        if(errorMessage.isBlank()) {
+            int parsedSpaceId = Integer.parseInt(spaceId);
+            int parsedDate = Integer.parseInt(date);
+            int parsedStartHour = Integer.parseInt(startHour);
+            int parsedEndHour = Integer.parseInt(endHour);
 
-        int parsedSpaceId = Integer.parseInt(spaceId);
-        int parsedDate = Integer.parseInt(date);
-        int parsedStartHour = Integer.parseInt(startHour);
-        int parsedEndHour = Integer.parseInt(endHour);
+            if (customerService.saveReservation
+                    (name, parsedSpaceId, parsedDate, parsedStartHour, parsedEndHour) != null) {
+                System.out.println("New reservation created!");
+            } else {
+                System.out.println("(!) Space with such ID not found or it was already reserved for this time slot.");
+            }
 
-        if (customerService.saveReservation
-                (name, parsedSpaceId, parsedDate, parsedStartHour, parsedEndHour) != null) {
-            System.out.println("New reservation created!");
         } else {
-            System.out.println("Space with such ID not found or it was already reserved for this time slot!");
+            System.out.print(errorMessage);
         }
     }
 
@@ -100,9 +100,9 @@ public class CustomerController extends Controller {
         System.out.println("Enter reservation ID to be removed:");
         String id = scanner.nextLine();
         String errorMessage = Validator.onId(id) ;
-        if (errorMessage.isEmpty()) {
+        if (errorMessage.isBlank()) {
             if (customerService.deleteReservation(Integer.parseInt(id))) System.out.println("Reservation is removed!");
-            else System.out.println("Reservation with such ID not found!");
+            else System.out.println("(!) Reservation with such ID not found");
         } else {
             System.out.print(errorMessage);
         }

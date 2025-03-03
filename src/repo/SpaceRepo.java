@@ -25,14 +25,13 @@ public class SpaceRepo implements Repo<Space> {
     }
 
     @Override
-    public void save(Space item) {
-        idToSpace.putIfAbsent(item.getId(), item);
+    public Space save(Space item) {
+        return idToSpace.putIfAbsent(item.getId(), item);
     }
 
     @Override
     public boolean delete(int id) {
         if (idToSpace.remove(id) == null) return false;
-
         return true;
     }
 }

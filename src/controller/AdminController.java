@@ -56,29 +56,16 @@ public class AdminController extends Controller {
         String type = scanner.nextLine();
         String errorMessage = validateSpaceObjectInput(name, price, type);
 
-        if(!errorMessage.isEmpty()) {
-            System.out.print(errorMessage);
-            return;
-        }
-
-        adminService.saveSpace(
-                switch(type.toLowerCase()) {
-                    case "private" -> Space.Type.PRIVATE;
-                    case "room" -> Space.Type.ROOM;
-                    default -> Space.Type.OPEN;
-                },
-                name,
-                Integer.parseInt(price));
-        System.out.println("New space added!");
-    }
-
-    private void removeSpace() {
-        System.out.println("Enter space ID to be removed:");
-        String id = scanner.nextLine();
-        String errorMessage = Validator.onId(id) ;
-        if (errorMessage.isEmpty()) {
-            if (adminService.deleteSpace(Integer.parseInt(id))) System.out.println("Space is removed!");
-            else System.out.println("Space with such ID not found!");
+        if(errorMessage.isBlank()) {
+            adminService.saveSpace(
+                    switch(type.toLowerCase()) {
+                        case "private" -> Space.Type.PRIVATE;
+                        case "room" -> Space.Type.ROOM;
+                        default -> Space.Type.OPEN;
+                    },
+                    name,
+                    Integer.parseInt(price));
+            System.out.println("New space added!");
         } else {
             System.out.print(errorMessage);
         }
@@ -95,6 +82,17 @@ public class AdminController extends Controller {
                 .append(Validator.onSpaceType(type)).toString();
     }
 
+    private void removeSpace() {
+        System.out.println("Enter space ID to be removed:");
+        String id = scanner.nextLine();
+        String errorMessage = Validator.onId(id) ;
+        if (errorMessage.isBlank()) {
+            if (adminService.deleteSpace(Integer.parseInt(id))) System.out.println("Space is removed!");
+            else System.out.println("(!) Space with such ID not found.");
+        } else {
+            System.out.print(errorMessage);
+        }
+    }
 
     protected void logOut() {
         System.out.println("Logged out of Admin!");
