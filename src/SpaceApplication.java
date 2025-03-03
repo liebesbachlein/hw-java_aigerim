@@ -21,19 +21,21 @@ public class SpaceApplication {
     private final CustomerController customerAgent;
     private Role role = Role.NONE;
     private final Scanner scanner;
+    private boolean isSessionPersistable;
 
     public SpaceApplication() {
+        System.out.println("--- Space App started ---");
         scanner = new Scanner(System.in);
-        SpaceRepo spaceRepo = new SpaceRepo();
-        ReservationRepo reservationRepo = new ReservationRepo();
+        SpaceRepo spaceRepo = new SpaceRepo("space_storage");
+        ReservationRepo reservationRepo = new ReservationRepo("reserv_storage");
 
-
-        try {
-            spaceRepo.save(new Space(Space.Type.OPEN, "Fancy Conference", 12000));
-            spaceRepo.save(new Space(Space.Type.PRIVATE, "Monaco Office", 7000));
-            spaceRepo.save(new Space(Space.Type.ROOM, "Parisian Windows", 1000));
-        } catch (DublicateIdException e) {
-            System.out.println(e.getMessage());
+        if (spaceRepo.init() && reservationRepo.init()) {
+            isSessionPersistable = true;
+        } else {
+            isSessionPersistable = false;
+            spaceRepo.disablePersistence();
+            reservationRepo.disablePersistence();
+            System.out.println("(!) Error occurred while configuring persistence. Your session will not be stored.");
         }
 
         adminAgent = new AdminController(new AdminService(reservationRepo, spaceRepo), scanner);
@@ -41,7 +43,6 @@ public class SpaceApplication {
     }
 
     public void run() {
-        System.out.println("Hello!");
         boolean isRunning = true;
         while(isRunning) {
             switch (role) {
@@ -68,7 +69,9 @@ public class SpaceApplication {
     }
 
     private void runAgent(Controller controller) {
-        if(!controller.run()) role = Role.NONE;
+        if(!controller.run()) {
+            role = Role.NONE;
+        }
     }
 
     private void printRules() {

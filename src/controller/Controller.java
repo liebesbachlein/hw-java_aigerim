@@ -52,4 +52,10 @@ public abstract class Controller {
         if (log.isEmpty()) System.out.println("No reservations made yet!");
         else System.out.println(log);
     }
+
+    public void storeSession() {
+        if(!service.storeInMemory()) {
+            System.out.println("(!) Error occurred while storing your session. Your changes might not be persisted.");
+        }
+    }
 }

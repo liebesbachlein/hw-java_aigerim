@@ -2,9 +2,10 @@ package model;
 
 import util.IdGenerator;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Reservation {
+public class Reservation implements Serializable {
     private String ownerName;
     private Space space; // FK
     private int date;

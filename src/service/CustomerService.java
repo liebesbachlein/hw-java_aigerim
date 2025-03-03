@@ -51,4 +51,9 @@ public class CustomerService extends Service {
     public boolean deleteReservation(int reservationId) {
         return reservationRepo.delete(reservationId);
     }
+
+    @Override
+    public boolean storeInMemory() {
+        return reservationRepo.persist();
+    }
 }

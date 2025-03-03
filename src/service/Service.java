@@ -2,6 +2,7 @@ package service;
 
 import model.Reservation;
 import model.Space;
+import repo.PersistentRepo;
 import repo.ReservationRepo;
 import repo.SpaceRepo;
 
@@ -35,5 +36,9 @@ public class Service {
 
     public List<Reservation> findReservationBySpaceId(int id) {
         return reservationRepo.findBySpaceId(id);
+    }
+
+    public boolean storeInMemory() {
+        return reservationRepo.persist() && spaceRepo.persist();
     }
 }

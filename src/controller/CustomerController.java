@@ -103,6 +103,7 @@ public class CustomerController extends Controller {
     }
 
     public void logOut() {
+        super.storeSession();
         System.out.println("Logged out of Customer!");
     }
 }

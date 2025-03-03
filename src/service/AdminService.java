@@ -28,4 +28,9 @@ public class AdminService extends Service {
     public boolean deleteSpace(int spaceId) {
         return spaceRepo.delete(spaceId);
     }
+
+    @Override
+    public boolean storeInMemory() {
+        return spaceRepo.persist();
+    }
 }

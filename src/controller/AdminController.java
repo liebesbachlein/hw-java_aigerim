@@ -96,6 +96,7 @@ public class AdminController extends Controller {
     }
 
     protected void logOut() {
+        super.storeSession();
         System.out.println("Logged out of Admin!");
     }
 }

@@ -2,7 +2,9 @@ package model;
 
 import util.IdGenerator;
 
-public class Space {
+import java.io.Serializable;
+
+public class Space implements Serializable {
     public enum Type {
         OPEN,
         PRIVATE,
