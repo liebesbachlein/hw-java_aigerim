@@ -4,10 +4,9 @@ import model.Reservation;
 import model.Space;
 import repo.ReservationRepo;
 import repo.SpaceRepo;
-import util.DublicateIdException;
+import util.DuplicateIdException;
 
 import java.util.List;
-import java.util.Map;
 
 public class CustomerService extends Service {
     public CustomerService(ReservationRepo reservationRepo, SpaceRepo spaceRepo) {
@@ -21,7 +20,7 @@ public class CustomerService extends Service {
                 Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
                 reservationRepo.save(reservation);
                 return reservation;
-            } catch (DublicateIdException e) {
+            } catch (DuplicateIdException e) {
                 System.out.println(e.getMessage());
             }
         }

@@ -1,9 +1,8 @@
 package repo;
 
 import model.Reservation;
-import util.DublicateIdException;
+import util.DuplicateIdException;
 
-import java.io.*;
 import java.util.*;
 
 public class ReservationRepo extends PersistentRepo<Reservation> implements Repo<Reservation> {
@@ -45,9 +44,9 @@ public class ReservationRepo extends PersistentRepo<Reservation> implements Repo
     }
 
     @Override
-    public Reservation save(Reservation item) throws DublicateIdException {
+    public Reservation save(Reservation item) throws DuplicateIdException {
         Reservation res = super.idToItem.putIfAbsent(item.getId(), item);
-        if (res != null) throw new DublicateIdException(item.getId(), item.getClass());
+        if (res != null) throw new DuplicateIdException(item.getId(), item.getClass());
         return null;
     }
 

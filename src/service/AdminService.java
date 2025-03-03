@@ -1,13 +1,9 @@
 package service;
 
-import model.Reservation;
 import model.Space;
 import repo.ReservationRepo;
 import repo.SpaceRepo;
-import util.DublicateIdException;
-
-import java.util.List;
-import java.util.Map;
+import util.DuplicateIdException;
 
 public class AdminService extends Service {
     public AdminService(ReservationRepo reservationRepo, SpaceRepo spaceRepo) {
@@ -18,7 +14,7 @@ public class AdminService extends Service {
         Space space = new Space(type, name, price);
         try {
             spaceRepo.save(space);
-        } catch (DublicateIdException e) {
+        } catch (DuplicateIdException e) {
             System.out.println(e.getMessage());
             return null;
         }

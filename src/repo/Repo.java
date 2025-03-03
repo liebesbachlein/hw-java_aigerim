@@ -1,6 +1,6 @@
 package repo;
 
-import util.DublicateIdException;
+import util.DuplicateIdException;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface Repo<T> {
 
     public List<T> getAll();
 
-    public T save(T item) throws DublicateIdException;
+    public T save(T item) throws DuplicateIdException;
 
     public boolean delete(int id);
 }

@@ -1,14 +1,10 @@
 package repo;
 
-import model.Reservation;
 import model.Space;
-import util.DublicateIdException;
+import util.DuplicateIdException;
 
-import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SpaceRepo extends PersistentRepo<Space> implements Repo<Space> {
 
@@ -27,9 +23,9 @@ public class SpaceRepo extends PersistentRepo<Space> implements Repo<Space> {
     }
 
     @Override
-    public Space save(Space item) throws DublicateIdException {
+    public Space save(Space item) throws DuplicateIdException {
         Space res = super.idToItem.putIfAbsent(item.getId(), item);
-        if (res != null) throw new DublicateIdException(item.getId(), item.getClass());
+        if (res != null) throw new DuplicateIdException(item.getId(), item.getClass());
         return null;
     }
 
