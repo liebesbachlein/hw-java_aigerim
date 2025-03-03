@@ -57,7 +57,7 @@ public class AdminController extends Controller {
         String errorMessage = validateSpaceObjectInput(name, price, type);
 
         if(errorMessage.isBlank()) {
-            adminService.saveSpace(
+            Space newSpace = adminService.saveSpace(
                     switch(type.toLowerCase()) {
                         case "private" -> Space.Type.PRIVATE;
                         case "room" -> Space.Type.ROOM;
@@ -65,7 +65,8 @@ public class AdminController extends Controller {
                     },
                     name,
                     Integer.parseInt(price));
-            System.out.println("New space added!");
+            if(newSpace != null) System.out.println("New space added!");
+            else System.out.println("Space wasn't added!");
         } else {
             System.out.print(errorMessage);
         }

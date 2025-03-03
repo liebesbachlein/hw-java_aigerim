@@ -68,18 +68,12 @@ public class CustomerController extends Controller {
         String errorMessage = validateReservationInput(name, spaceId, date, startHour, endHour);
 
         if(errorMessage.isBlank()) {
-            int parsedSpaceId = Integer.parseInt(spaceId);
-            int parsedDate = Integer.parseInt(date);
-            int parsedStartHour = Integer.parseInt(startHour);
-            int parsedEndHour = Integer.parseInt(endHour);
-
             if (customerService.saveReservation
-                    (name, parsedSpaceId, parsedDate, parsedStartHour, parsedEndHour) != null) {
+                    (name, Integer.parseInt(spaceId), Integer.parseInt(date), Integer.parseInt(startHour), Integer.parseInt(endHour)) != null) {
                 System.out.println("New reservation created!");
             } else {
-                System.out.println("(!) Space with such ID not found or it was already reserved for this time slot.");
+                System.out.println("(!) Space with such ID not found or it was already reserved for this time slot. Or other error occurred");
             }
-
         } else {
             System.out.print(errorMessage);
         }

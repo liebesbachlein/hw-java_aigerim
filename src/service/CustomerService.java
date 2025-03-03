@@ -4,6 +4,7 @@ import model.Reservation;
 import model.Space;
 import repo.ReservationRepo;
 import repo.SpaceRepo;
+import util.DublicateIdException;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,14 @@ public class CustomerService extends Service {
     public Reservation saveReservation(String ownerName, int spaceId, int date, int startHour, int endHour) {
         Space space = verifySpaceAvailability(spaceId, date, startHour, endHour);
         if (space != null) {
-            Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
-            reservationRepo.save(reservation);
-            return reservation;
+            try {
+                Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
+                reservationRepo.save(reservation);
+                return reservation;
+            } catch (DublicateIdException e) {
+                System.out.println(e.getMessage());
+            }
         }
-
         return null;
     }
 

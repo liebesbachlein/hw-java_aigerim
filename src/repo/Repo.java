@@ -1,5 +1,7 @@
 package repo;
 
+import util.DublicateIdException;
+
 import java.util.List;
 
 public interface Repo<T> {
@@ -7,7 +9,7 @@ public interface Repo<T> {
 
     public List<T> getAll();
 
-    public T save(T item);
+    public T save(T item) throws DublicateIdException;
 
     public boolean delete(int id);
 }

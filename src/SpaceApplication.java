@@ -6,6 +6,7 @@ import repo.ReservationRepo;
 import repo.SpaceRepo;
 import service.AdminService;
 import service.CustomerService;
+import util.DublicateIdException;
 
 import java.util.*;
 
@@ -26,9 +27,14 @@ public class SpaceApplication {
         SpaceRepo spaceRepo = new SpaceRepo();
         ReservationRepo reservationRepo = new ReservationRepo();
 
-        spaceRepo.save(new Space(Space.Type.OPEN, "Fancy Conference", 12000));
-        spaceRepo.save(new Space(Space.Type.PRIVATE, "Monaco Office", 7000));
-        spaceRepo.save(new Space(Space.Type.ROOM, "Parisian Windows", 1000));
+
+        try {
+            spaceRepo.save(new Space(Space.Type.OPEN, "Fancy Conference", 12000));
+            spaceRepo.save(new Space(Space.Type.PRIVATE, "Monaco Office", 7000));
+            spaceRepo.save(new Space(Space.Type.ROOM, "Parisian Windows", 1000));
+        } catch (DublicateIdException e) {
+            System.out.println(e.getMessage());
+        }
 
         adminAgent = new AdminController(new AdminService(reservationRepo, spaceRepo), scanner);
         customerAgent = new CustomerController(new CustomerService(reservationRepo, spaceRepo), scanner);

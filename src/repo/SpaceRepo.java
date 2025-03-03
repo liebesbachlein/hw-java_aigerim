@@ -1,6 +1,8 @@
 package repo;
 
+import model.Reservation;
 import model.Space;
+import util.DublicateIdException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +27,10 @@ public class SpaceRepo implements Repo<Space> {
     }
 
     @Override
-    public Space save(Space item) {
-        return idToSpace.putIfAbsent(item.getId(), item);
+    public Space save(Space item) throws DublicateIdException {
+        Space res = idToSpace.putIfAbsent(item.getId(), item);
+        if (res != null) throw new DublicateIdException(item.getId(), item.getClass());
+        return null;
     }
 
     @Override

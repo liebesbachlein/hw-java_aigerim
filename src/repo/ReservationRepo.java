@@ -1,6 +1,7 @@
 package repo;
 
 import model.Reservation;
+import util.DublicateIdException;
 
 import java.io.*;
 import java.util.*;
@@ -46,8 +47,10 @@ public class ReservationRepo implements Repo<Reservation> {
     }
 
     @Override
-    public Reservation save(Reservation item) {
-        return idToReservation.put(item.getId(), item);
+    public Reservation save(Reservation item) throws DublicateIdException {
+        Reservation res = idToReservation.putIfAbsent(item.getId(), item);
+        if (res != null) throw new DublicateIdException(item.getId(), item.getClass());
+        return null;
     }
 
     @Override
