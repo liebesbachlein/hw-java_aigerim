@@ -1,5 +1,6 @@
-package controller;
-
+import controller.AdminController;
+import controller.Controller;
+import controller.CustomerController;
 import model.Space;
 import repo.ReservationRepo;
 import repo.SpaceRepo;
@@ -15,8 +16,8 @@ public class SpaceApplication {
         NONE
     }
 
-    private final AdminAgent adminAgent;
-    private final CustomerAgent customerAgent;
+    private final AdminController adminAgent;
+    private final CustomerController customerAgent;
     private Role role = Role.NONE;
     private final Scanner scanner;
 
@@ -29,8 +30,8 @@ public class SpaceApplication {
         spaceRepo.save(new Space(Space.Type.PRIVATE, "Monaco Office", 7000));
         spaceRepo.save(new Space(Space.Type.ROOM, "Parisian Windows", 1000));
 
-        adminAgent = new AdminAgent(new AdminService(reservationRepo, spaceRepo), scanner);
-        customerAgent = new CustomerAgent(new CustomerService(reservationRepo, spaceRepo), scanner);
+        adminAgent = new AdminController(new AdminService(reservationRepo, spaceRepo), scanner);
+        customerAgent = new CustomerController(new CustomerService(reservationRepo, spaceRepo), scanner);
     }
 
     public void run() {
@@ -60,12 +61,8 @@ public class SpaceApplication {
         System.out.println("Bye!");
     }
 
-    private void runAgent(Agent agent) {
-        if(!agent.run()) role = Role.NONE;
-    }
-
-    protected static void printInvalidCommand() {
-        System.out.println("Invalid command.");
+    private void runAgent(Controller controller) {
+        if(!controller.run()) role = Role.NONE;
     }
 
     private void printRules() {
@@ -81,7 +78,7 @@ public class SpaceApplication {
                 role = Role.CUSTOMER;
                 break;
             default:
-                printInvalidCommand();
+                System.out.println("Invalid command.");
                 break;
         }
     }

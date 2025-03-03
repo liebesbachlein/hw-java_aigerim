@@ -13,9 +13,35 @@ public class CustomerService extends Service {
         super(reservationRepo, spaceRepo);
     }
 
-    public void saveReservation(String ownerName, Space space, int date, int startHour, int endHour) {
-        Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
-        reservationRepo.save(reservation);
+    public Reservation saveReservation(String ownerName, int spaceId, int date, int startHour, int endHour) {
+        Space space = verifySpaceAvailability(spaceId, date, startHour, endHour);
+        if (space != null) {
+            Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
+            reservationRepo.save(reservation);
+            return reservation;
+        }
+
+        return null;
+    }
+
+    public Space verifySpaceAvailability(int spaceId, int date, int startHour, int endHour) {
+        Space space = findSpaceById(spaceId);
+
+        if (space != null) {
+            List<Reservation> reservations = findReservationBySpaceId(spaceId);
+            for (Reservation reservation : reservations) {
+                if (reservation.getDate() == date) {
+                    if ((startHour >= reservation.getStartHour() &&
+                            startHour < reservation.getEndHour())
+                            || (endHour > reservation.getStartHour() &&
+                            endHour <= reservation.getEndHour())) {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        return space;
     }
 
     public boolean deleteReservation(int reservationId) {

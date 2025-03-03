@@ -13,9 +13,10 @@ public class AdminService extends Service {
         super(reservationRepo, spaceRepo);
     }
 
-    public void saveSpace(Space.Type type, String name, int price) {
+    public Space saveSpace(Space.Type type, String name, int price) {
         Space space = new Space(type, name, price);
         spaceRepo.save(space);
+        return space;
     }
 
     public boolean deleteSpace(int spaceId) {
