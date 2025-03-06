@@ -2,8 +2,8 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #2
+Homework #3
 
-Custom Exception in util/DuplicateIdException
+Custom Class Loader in util/CustomClassLoader
 
-State storing in repo/PersistentRepo
+Extraction of Logger.class in config/LoggingConfig
