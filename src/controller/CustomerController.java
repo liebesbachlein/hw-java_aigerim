@@ -84,9 +84,9 @@ public class CustomerController extends Controller {
 
         return errorMessage
                 .append(Validator.onName(name))
-                .append(System.getProperty("line.separator"))
+                .append(System.lineSeparator())
                 .append(Validator.onId(spaceId))
-                .append(System.getProperty("line.separator"))
+                .append(System.lineSeparator())
                 .append(Validator.onStartEndHours(startHour, endHour)).toString();
     }
 

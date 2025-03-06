@@ -1,12 +1,11 @@
+import config.DataConfig;
+import config.IOConfig;
+import config.LoggingConfig;
 import controller.AdminController;
 import controller.Controller;
 import controller.CustomerController;
-import repo.ReservationRepo;
-import repo.SpaceRepo;
 import service.AdminService;
 import service.CustomerService;
-
-import java.util.*;
 
 public class SpaceApplication {
     private enum Role {
@@ -17,27 +16,19 @@ public class SpaceApplication {
 
     private final AdminController adminAgent;
     private final CustomerController customerAgent;
+    private final IOConfig ioConfig;
+    private final DataConfig dataConfig;
+    private final LoggingConfig loggingConfig;
     private Role role = Role.NONE;
-    private final Scanner scanner;
-    private boolean isSessionPersistable;
 
     public SpaceApplication() {
+        ioConfig = IOConfig.getInstance();
+        dataConfig = DataConfig.getInstance();
+        loggingConfig = LoggingConfig.getInstance();
         System.out.println("--- Space App started ---");
-        scanner = new Scanner(System.in);
-        SpaceRepo spaceRepo = new SpaceRepo("space_storage");
-        ReservationRepo reservationRepo = new ReservationRepo("reserv_storage");
 
-        if (spaceRepo.init() && reservationRepo.init()) {
-            isSessionPersistable = true;
-        } else {
-            isSessionPersistable = false;
-            spaceRepo.disablePersistence();
-            reservationRepo.disablePersistence();
-            System.out.println("(!) Error occurred while configuring persistence. Your session will not be stored.");
-        }
-
-        adminAgent = new AdminController(new AdminService(reservationRepo, spaceRepo), scanner);
-        customerAgent = new CustomerController(new CustomerService(reservationRepo, spaceRepo), scanner);
+        adminAgent = new AdminController(new AdminService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
+        customerAgent = new CustomerController(new CustomerService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
     }
 
     public void run() {
@@ -52,7 +43,7 @@ public class SpaceApplication {
                     break;
                 default:
                     printRules();
-                    String input = scanner.nextLine().toLowerCase();
+                    String input = ioConfig.getScanner().nextLine().toLowerCase();
 
                     if (input.equals("q")) {
                         isRunning = false;
@@ -62,12 +53,14 @@ public class SpaceApplication {
                     break;
             }
         }
-        scanner.close();
+        ioConfig.getScanner().close();
         System.out.println("Bye!");
     }
 
     private void runAgent(Controller controller) {
+        loggingConfig.logInfo("Logged in " + role.name());
         if(!controller.run()) {
+            loggingConfig.logInfo("Logged out of " + role.name());
             role = Role.NONE;
         }
     }

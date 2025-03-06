@@ -77,9 +77,9 @@ public class AdminController extends Controller {
 
         return errorMessage
                 .append(Validator.onName(name))
-                .append(System.getProperty("line.separator"))
+                .append(System.lineSeparator())
                 .append(Validator.onPrice(price))
-                .append(System.getProperty("line.separator"))
+                .append(System.lineSeparator())
                 .append(Validator.onSpaceType(type)).toString();
     }
 
