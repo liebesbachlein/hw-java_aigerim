@@ -42,6 +42,7 @@ public class Reservation implements Serializable {
         return endHour;
     }
 
+    public int getSpaceId() { return space.getId(); }
 
     @Override
     public String toString() {

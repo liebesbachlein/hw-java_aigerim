@@ -3,8 +3,21 @@ package model;
 import util.IdGenerator;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Space implements Serializable {
+    public int getPrice() {
+        return price;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public enum Type {
         OPEN,
         PRIVATE,
@@ -35,6 +48,18 @@ public class Space implements Serializable {
                 ", type=" + type +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Space space = (Space) o;
+        return id == space.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 

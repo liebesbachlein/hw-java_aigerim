@@ -16,9 +16,10 @@ public class CustomerController extends Controller {
     public void printRules() {
         System.out.println("\nCustomer Menu: "
                 + "View all spaces — 1, "
-                + "Make reservation — 2, "
-                + "Cancel reservation — 3, "
-                + "View my reservations — 4, "
+                + "[NEW!] View space occupation calendar — 2, "
+                + "Make reservation — 3, "
+                + "Cancel reservation — 4, "
+                + "View my reservations — 5, "
                 + "Log out — 0");
     }
 
@@ -34,14 +35,18 @@ public class CustomerController extends Controller {
                 return true;
             }
             case "2": {
-                createReservation();
+                super.printCalendar();
                 return true;
             }
             case "3": {
-                cancelReservation();
+                createReservation();
                 return true;
             }
             case "4": {
+                cancelReservation();
+                return true;
+            }
+            case "5": {
                 super.printReservations();
                 return true;
             }
@@ -86,6 +91,8 @@ public class CustomerController extends Controller {
                 .append(Validator.onName(name))
                 .append(System.lineSeparator())
                 .append(Validator.onId(spaceId))
+                .append(System.lineSeparator())
+                .append(Validator.onDateNumber(date))
                 .append(System.lineSeparator())
                 .append(Validator.onStartEndHours(startHour, endHour)).toString();
     }

@@ -2,59 +2,51 @@ package repo;
 
 import model.Reservation;
 import util.DuplicateIdException;
+import util.annotations.StreamAPI;
+import util.matcher.CriteriaMatcher;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ReservationRepo extends PersistentRepo<Reservation> implements Repo<Reservation> {
     public ReservationRepo(String fileStorage) {
         super(fileStorage);
     }
 
-    @Override
     public Reservation findById(int id) {
         return super.idToItem.get(id);
     }
 
-    public List<Reservation> findBySpaceId(int id) {
-        List<Reservation> foundReservations = new ArrayList<>();
-        for (Reservation reservation : super.idToItem.values()) {
-            if (reservation.getSpace().getId() == id) foundReservations.add(reservation);
-        }
-        return foundReservations;
+    @StreamAPI
+    public List<Reservation> findByCriteria(CriteriaMatcher<Reservation> matcher) {
+        return super.idToItem.values().stream()
+                .filter(matcher::match)
+                .toList();
     }
 
-    @Override
+    @StreamAPI
     public List<Reservation> getAll() {
-        return new ArrayList(super.idToItem.values());
+        return super.idToItem.values().stream().toList();
     }
 
+    @StreamAPI
     public Map<Integer, List<Reservation>> getSpaceIdToReservation() {
-        Map<Integer, List<Reservation>> spaceIdToReservation = new HashMap<>();
-        for (Reservation reservation : super.idToItem.values()) {
-            int spaceId = reservation.getSpace().getId();
-            if (spaceIdToReservation.containsKey(spaceId)) {
-                spaceIdToReservation.get(spaceId).add(reservation);
-            } else {
-                List<Reservation> list = new ArrayList<>();
-                list.add(reservation);
-                spaceIdToReservation.put(spaceId, list);
-            }
-        }
-        return spaceIdToReservation;
+        return super.idToItem.values().stream()
+               .collect(Collectors.groupingBy(Reservation::getSpaceId));
     }
 
-    @Override
     public Reservation save(Reservation item) throws DuplicateIdException {
         Reservation res = super.idToItem.putIfAbsent(item.getId(), item);
         if (res != null) throw new DuplicateIdException(item.getId(), item.getClass());
-        return null;
+        return item;
     }
 
-    @Override
     public boolean delete(int id) {
         if (super.idToItem.remove(id) == null) return false;
         return true;
     }
 
-
+    public int count() {
+        return super.idToItem.size();
+    }
 }

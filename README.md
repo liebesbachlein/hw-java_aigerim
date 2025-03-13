@@ -2,10 +2,12 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #3
+Homework #5
 
-Custom Class Loader in util/CustomClassLoader
+Functional Interface in util/matcher/CriteriaMatcher
 
-Extraction of Logger.class in config/LoggingConfig
+Stream API used in repo/ReservationRepo, repo/SpaceRepo, and service/Service
 
-Logger.class contents in java are also in LoggerClass.txt (for checking)
+Optional used in service/Service checkSpaceAvailability
+
+Optional, Stream API and Lambda usage are highlighted by custom annotations

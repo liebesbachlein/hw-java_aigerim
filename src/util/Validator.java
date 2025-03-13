@@ -59,7 +59,7 @@ public class Validator {
     }
 
     public static String onHourNumber(String date) {
-        if(!date.matches("([0-9]|1[0-9]|2[0-3])")) return "(!) Invalid Hour";
+        if(!date.matches("([0-9]|1[0-9]|2[0-4])")) return "(!) Invalid Hour";
 
         return "";
     }

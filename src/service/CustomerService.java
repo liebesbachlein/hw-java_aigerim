@@ -6,15 +6,13 @@ import repo.ReservationRepo;
 import repo.SpaceRepo;
 import util.DuplicateIdException;
 
-import java.util.List;
-
 public class CustomerService extends Service {
     public CustomerService(ReservationRepo reservationRepo, SpaceRepo spaceRepo) {
         super(reservationRepo, spaceRepo);
     }
 
     public Reservation saveReservation(String ownerName, int spaceId, int date, int startHour, int endHour) {
-        Space space = verifySpaceAvailability(spaceId, date, startHour, endHour);
+        Space space = checkSpaceAvailability(spaceId, date, startHour, endHour);
         if (space != null) {
             try {
                 Reservation reservation = new Reservation(ownerName, space, date, startHour, endHour);
@@ -24,27 +22,8 @@ public class CustomerService extends Service {
                 System.out.println(e.getMessage());
             }
         }
+
         return null;
-    }
-
-    public Space verifySpaceAvailability(int spaceId, int date, int startHour, int endHour) {
-        Space space = findSpaceById(spaceId);
-
-        if (space != null) {
-            List<Reservation> reservations = findReservationBySpaceId(spaceId);
-            for (Reservation reservation : reservations) {
-                if (reservation.getDate() == date) {
-                    if ((startHour >= reservation.getStartHour() &&
-                            startHour < reservation.getEndHour())
-                            || (endHour > reservation.getStartHour() &&
-                            endHour <= reservation.getEndHour())) {
-                        return null;
-                    }
-                }
-            }
-        }
-
-        return space;
     }
 
     public boolean deleteReservation(int reservationId) {

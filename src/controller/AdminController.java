@@ -25,10 +25,14 @@ public class AdminController extends Controller {
                 return true;
             }
             case "2": {
-                createSpace();
+                super.printCalendar();
                 return true;
             }
             case "3": {
+                createSpace();
+                return true;
+            }
+            case "4": {
                 removeSpace();
                 return true;
             }
@@ -42,8 +46,9 @@ public class AdminController extends Controller {
     public void printRules() {
         System.out.println("\nAdmin Menu: "
                 + "View all spaces — 1, "
-                + "Add space — 2, "
-                + "Remove space — 3, "
+                + "[NEW!] View space occupation calendar — 2, "
+                + "Add space — 3, "
+                + "Remove space — 4, "
                 + "Log out — 0");
     }
 

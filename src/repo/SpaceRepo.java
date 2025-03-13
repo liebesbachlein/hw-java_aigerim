@@ -2,8 +2,10 @@ package repo;
 
 import model.Space;
 import util.DuplicateIdException;
+import util.annotations.Lambda;
+import util.annotations.StreamAPI;
+import util.matcher.CriteriaMatcher;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpaceRepo extends PersistentRepo<Space> implements Repo<Space> {
@@ -12,26 +14,34 @@ public class SpaceRepo extends PersistentRepo<Space> implements Repo<Space> {
         super(fileStorage);
     }
 
-    @Override
     public Space findById(int id) {
         return super.idToItem.get(id);
     }
 
-    @Override
+    @StreamAPI
     public List<Space> getAll() {
-        return new ArrayList(super.idToItem.values());
+        return super.idToItem.values().stream().toList();
     }
 
-    @Override
+    @StreamAPI
+    public List<Space> findByCriteria(CriteriaMatcher<Space> matcher) {
+        return super.idToItem.values().stream()
+                .filter(matcher::match)
+                .toList();
+    }
+
     public Space save(Space item) throws DuplicateIdException {
         Space res = super.idToItem.putIfAbsent(item.getId(), item);
         if (res != null) throw new DuplicateIdException(item.getId(), item.getClass());
-        return null;
+        return item;
     }
 
-    @Override
     public boolean delete(int id) {
         if (super.idToItem.remove(id) == null) return false;
         return true;
+    }
+
+    public int count() {
+        return super.idToItem.size();
     }
 }
