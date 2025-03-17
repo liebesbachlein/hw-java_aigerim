@@ -6,15 +6,15 @@ import util.matcher.CriteriaMatcher;
 import java.util.List;
 
 public interface Repo<T> {
-    public T findById(int id);
+     T findById(int id);
 
-    public List<T> getAll();
+     List<T> getAll();
 
-    public T save(T item) throws DuplicateIdException;
+     T save(T item) throws DuplicateIdException;
 
-    public boolean delete(int id);
+     boolean delete(int id);
 
-    public List<T> findByCriteria(CriteriaMatcher<T> matcher);
+     List<T> findByCriteria(CriteriaMatcher<T> matcher);
 
-    public int count();
+     int count();
 }

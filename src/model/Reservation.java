@@ -1,10 +1,12 @@
 package model;
 
+import lombok.Getter;
 import util.IdGenerator;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Getter
 public class Reservation implements Serializable {
     private String ownerName;
     private Space space; // FK
@@ -22,28 +24,6 @@ public class Reservation implements Serializable {
         this.endHour = endHour;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public Space getSpace() {
-        return space;
-    }
-
-    public int getStartHour() {
-        return startHour;
-    }
-
-    public int getDate() {
-        return date;
-    }
-
-    public int getEndHour() {
-        return endHour;
-    }
-
-    public int getSpaceId() { return space.getId(); }
-
     @Override
     public String toString() {
         return "Reservation{" +
@@ -54,10 +34,5 @@ public class Reservation implements Serializable {
                 ", startHour=" + startHour +
                 ", endHour=" + endHour +
                 '}';
-    }
-
-
-    public String getOwnerName() {
-        return ownerName;
     }
 }

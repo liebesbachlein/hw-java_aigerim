@@ -1,23 +1,13 @@
 package model;
 
+import lombok.Getter;
 import util.IdGenerator;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
 public class Space implements Serializable {
-    public int getPrice() {
-        return price;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public enum Type {
         OPEN,
         PRIVATE,
@@ -36,9 +26,7 @@ public class Space implements Serializable {
         this.price = price;
     }
 
-    public int getId() {
-        return id;
-    }
+
 
     @Override
     public String toString() {

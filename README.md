@@ -2,12 +2,8 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #5
+Homework #6
 
-Functional Interface in util/matcher/CriteriaMatcher
+Added Lombok to dependencies
 
-Stream API used in repo/ReservationRepo, repo/SpaceRepo, and service/Service
-
-Optional used in service/Service checkSpaceAvailability
-
-Optional, Stream API and Lambda usage are highlighted by custom annotations
+Used Lombok Getter in /model classes
