@@ -6,4 +6,4 @@ Homework #6
 
 Added Lombok to dependencies
 
-Used Lombok Getter in /model classes
+Used Lombok Getter in /app.space.model classes
