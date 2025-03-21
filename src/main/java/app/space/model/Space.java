@@ -1,6 +1,6 @@
-package model;
+package main.java.app.space.model;
 
-import util.IdGenerator;
+import main.java.app.space.util.IdGenerator;
 
 public class Space {
     public enum Type {

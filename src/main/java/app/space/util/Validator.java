@@ -1,4 +1,4 @@
-package util;
+package main.java.app.space.util;
 
 import java.util.Arrays;
 

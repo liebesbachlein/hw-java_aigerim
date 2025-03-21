@@ -1,8 +1,7 @@
-package repo;
+package main.java.app.space.repo;
 
-import model.Reservation;
+import main.java.app.space.model.Reservation;
 
-import java.io.*;
 import java.util.*;
 
 public class ReservationRepo implements Repo<Reservation> {

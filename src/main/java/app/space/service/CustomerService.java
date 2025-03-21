@@ -1,12 +1,11 @@
-package service;
+package main.java.app.space.service;
 
-import model.Reservation;
-import model.Space;
-import repo.ReservationRepo;
-import repo.SpaceRepo;
+import main.java.app.space.model.Reservation;
+import main.java.app.space.model.Space;
+import main.java.app.space.repo.ReservationRepo;
+import main.java.app.space.repo.SpaceRepo;
 
 import java.util.List;
-import java.util.Map;
 
 public class CustomerService extends Service {
     public CustomerService(ReservationRepo reservationRepo, SpaceRepo spaceRepo) {

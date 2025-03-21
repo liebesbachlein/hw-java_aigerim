@@ -1,7 +1,7 @@
-package controller;
+package main.java.app.space.controller;
 
-import service.CustomerService;
-import util.Validator;
+import main.java.app.space.service.CustomerService;
+import main.java.app.space.util.Validator;
 
 import java.util.Scanner;
 

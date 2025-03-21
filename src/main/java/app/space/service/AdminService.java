@@ -1,12 +1,8 @@
-package service;
+package main.java.app.space.service;
 
-import model.Reservation;
-import model.Space;
-import repo.ReservationRepo;
-import repo.SpaceRepo;
-
-import java.util.List;
-import java.util.Map;
+import main.java.app.space.model.Space;
+import main.java.app.space.repo.ReservationRepo;
+import main.java.app.space.repo.SpaceRepo;
 
 public class AdminService extends Service {
     public AdminService(ReservationRepo reservationRepo, SpaceRepo spaceRepo) {

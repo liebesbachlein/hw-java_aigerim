@@ -1,8 +1,6 @@
-package model;
+package main.java.app.space.model;
 
-import util.IdGenerator;
-
-import java.util.Date;
+import main.java.app.space.util.IdGenerator;
 
 public class Reservation {
     private String ownerName;

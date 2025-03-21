@@ -1,8 +1,8 @@
-package controller;
+package main.java.app.space.controller;
 
-import model.Space;
-import service.AdminService;
-import util.Validator;
+import main.java.app.space.model.Space;
+import main.java.app.space.service.AdminService;
+import main.java.app.space.util.Validator;
 import java.util.Scanner;
 
 public class AdminController extends Controller {

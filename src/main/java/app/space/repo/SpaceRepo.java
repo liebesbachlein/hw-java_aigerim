@@ -1,6 +1,6 @@
-package repo;
+package main.java.app.space.repo;
 
-import model.Space;
+import main.java.app.space.model.Space;
 
 import java.util.ArrayList;
 import java.util.HashMap;

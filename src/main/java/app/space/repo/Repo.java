@@ -1,4 +1,4 @@
-package repo;
+package main.java.app.space.repo;
 
 import java.util.List;
 

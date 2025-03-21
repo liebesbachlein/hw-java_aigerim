@@ -1,8 +1,8 @@
-package controller;
+package main.java.app.space.controller;
 
-import model.Reservation;
-import model.Space;
-import service.Service;
+import main.java.app.space.model.Reservation;
+import main.java.app.space.model.Space;
+import main.java.app.space.service.Service;
 
 import java.util.List;
 import java.util.Scanner;

@@ -1,11 +1,13 @@
-import controller.AdminController;
-import controller.Controller;
-import controller.CustomerController;
-import model.Space;
-import repo.ReservationRepo;
-import repo.SpaceRepo;
-import service.AdminService;
-import service.CustomerService;
+package main.java.app.space;
+
+import main.java.app.space.controller.AdminController;
+import main.java.app.space.controller.Controller;
+import main.java.app.space.controller.CustomerController;
+import main.java.app.space.model.Space;
+import main.java.app.space.repo.ReservationRepo;
+import main.java.app.space.repo.SpaceRepo;
+import main.java.app.space.service.AdminService;
+import main.java.app.space.service.CustomerService;
 
 import java.util.*;
 
