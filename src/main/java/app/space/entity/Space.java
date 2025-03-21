@@ -1,32 +1,35 @@
-package app.space.model;
+package app.space.entity;
 
 import lombok.Getter;
-import app.space.util.IdGenerator;
-
+import lombok.Setter;
 import java.io.Serializable;
-import java.util.Objects;
 
+@Setter
 @Getter
-public class Space implements Serializable {
+public class Space extends Entity implements Serializable {
     public enum Type {
         OPEN,
         PRIVATE,
         ROOM
     }
 
-    private final int id;
     private String name;
     private Type type;
     private int price;
 
     public Space(Type type, String name, int price) {
+        super();
         this.name = name;
-        this.id = IdGenerator.generateId();
         this.type = type;
         this.price = price;
     }
 
-
+    public Space(int id, Type type, String name, int price) {
+        super(id);
+        this.name = name;
+        this.type = type;
+        this.price = price;
+    }
 
     @Override
     public String toString() {
@@ -36,18 +39,6 @@ public class Space implements Serializable {
                 ", type=" + type +
                 ", price=" + price +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Space space = (Space) o;
-        return id == space.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
 

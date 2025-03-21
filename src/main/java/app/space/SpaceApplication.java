@@ -16,8 +16,8 @@ public class SpaceApplication {
         NONE
     }
 
-    private final AdminUI adminAgent;
-    private final CustomerUI customerAgent;
+    private final AdminUI adminUI;
+    private final CustomerUI customerUI;
     private final IOConfig ioConfig;
     private final DataConfig dataConfig;
     private final LoggingConfig loggingConfig;
@@ -29,8 +29,8 @@ public class SpaceApplication {
         loggingConfig = LoggingConfig.getInstance();
         System.out.println("--- Space App started ---");
 
-        adminAgent = new AdminUI(new AdminService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
-        customerAgent = new CustomerUI(new CustomerService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
+        adminUI = new AdminUI(new AdminService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
+        customerUI = new CustomerUI(new CustomerService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
     }
 
     public void run() {
@@ -38,10 +38,10 @@ public class SpaceApplication {
         while(isRunning) {
             switch (role) {
                 case ADMIN:
-                    runAgent(adminAgent);
+                    runAgent(adminUI);
                     break;
                 case CUSTOMER:
-                    runAgent(customerAgent);
+                    runAgent(customerUI);
                     break;
                 default:
                     printRules();
@@ -56,6 +56,7 @@ public class SpaceApplication {
             }
         }
         ioConfig.getScanner().close();
+        dataConfig.close();
         System.out.println("Bye!");
     }
 

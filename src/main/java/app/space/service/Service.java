@@ -1,11 +1,9 @@
 package app.space.service;
 
-import app.space.model.Reservation;
-import app.space.model.Space;
+import app.space.entity.Reservation;
+import app.space.entity.Space;
 import app.space.repo.ReservationRepo;
 import app.space.repo.SpaceRepo;
-import app.space.util.annotations.Lambda;
-import app.space.util.annotations.StreamAPI;
 import app.space.util.matcher.ReservationCriteriaMatcher;
 import app.space.util.matcher.SpaceCriteriaMatcher;
 
@@ -49,8 +47,6 @@ public class Service {
         return reservationRepo.findByCriteria(matcher);
     }
 
-    @StreamAPI
-    @Lambda
     public List<Space> getSpacesByAvailabilityAndPrice(
             int startDate, int endDate, int startHour, int endHour, int startPrice, int endPrice) {
         ReservationCriteriaMatcher resMatcher = new ReservationCriteriaMatcher
@@ -75,8 +71,6 @@ public class Service {
         return spaceRepo.getAll().stream().filter(isSpaceAvailable).filter(priceMatcher::match).toList();
     }
 
-    @StreamAPI
-    @app.space.util.annotations.Optional
     public Space checkSpaceAvailability(int spaceId, int date, int startHour, int endHour) {
         ReservationCriteriaMatcher matcher = new ReservationCriteriaMatcher
                 .ReservationCriteriaMatcherBuilder()
@@ -94,9 +88,5 @@ public class Service {
         } else {
             return spaceRepo.findById(spaceId);
         }
-    }
-
-    public boolean storeInMemory() {
-        return reservationRepo.persist() && spaceRepo.persist();
     }
 }

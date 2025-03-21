@@ -1,7 +1,7 @@
 package app.space.ui;
 
-import app.space.model.Reservation;
-import app.space.model.Space;
+import app.space.entity.Reservation;
+import app.space.entity.Space;
 import app.space.service.Service;
 
 import java.util.Scanner;
@@ -68,9 +68,7 @@ public abstract class UI {
                         .append(System.lineSeparator());
             }
 
-            out.append(space)
-                    .append(System.lineSeparator())
-                    .append(System.lineSeparator());;
+            out.append(space).append(System.lineSeparator());
         }
 
         if (out.isEmpty()) System.out.println("No spaces created yet!");
@@ -85,11 +83,5 @@ public abstract class UI {
 
         if (log.isEmpty()) System.out.println("No reservations made yet!");
         else System.out.println(log);
-    }
-
-    public void storeSession() {
-        if(!service.storeInMemory()) {
-            System.out.println("(!) Error occurred while storing your session. Your changes might not be persisted.");
-        }
     }
 }

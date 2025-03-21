@@ -1,5 +1,5 @@
 package app.space.util.matcher;
-import app.space.model.Space;
+import app.space.entity.Space;
 
 public class SpaceCriteriaMatcher implements CriteriaMatcher<Space> {
     private String name;

@@ -1,37 +1,35 @@
 package app.space.config;
 
-import app.space.repo.ReservationRepo;
-import app.space.repo.SpaceRepo;
+import app.space.entity.Reservation;
+import app.space.entity.Space;
+import app.space.repo.*;
+import app.space.util.PersistenceException;
+import lombok.Getter;
+
 
 public class DataConfig {
     private static final DataConfig instance = new DataConfig();
     private final SpaceRepo spaceRepo;
     private final ReservationRepo reservationRepo;
-    private static boolean isSessionPersistable;
+    private RepoSource<Space> spaceRepoSource;
+    private RepoSource<Reservation> reservationRepoSource;
 
     private DataConfig() {
-        spaceRepo = new SpaceRepo("space_storage");
-        reservationRepo = new ReservationRepo("reserv_storage");
-        configurePersistence(spaceRepo, reservationRepo);
-    }
-
-    private static void configurePersistence(SpaceRepo spaceRepo, ReservationRepo reservationRepo) {
-        if (spaceRepo.init() && reservationRepo.init()) {
-            isSessionPersistable = true;
-        } else {
-            isSessionPersistable = false;
-            spaceRepo.disablePersistence();
-            reservationRepo.disablePersistence();
-            System.out.println("(!) Error occurred while configuring persistence. Your session will not be stored.");
+       try {
+           spaceRepoSource = new PersistentRepoSource<Space>(Space.class);
+           reservationRepoSource = new PersistentRepoSource<Reservation>(Reservation.class);
+        } catch (PersistenceException ex) {
+           System.out.println(ex.getMessage());
+           spaceRepoSource = new NonPersistentRepoSource<>();
+           reservationRepoSource = new NonPersistentRepoSource<>();
         }
+        spaceRepo = new SpaceRepo(spaceRepoSource);
+        reservationRepo = new ReservationRepo(reservationRepoSource);
     }
 
-    public static boolean isSessionPersistable() {
-        return isSessionPersistable;
-    }
-
-    public static DataConfig getInstance() {
-        return instance;
+    public void close() {
+        spaceRepoSource.close();
+        reservationRepoSource.close();
     }
 
     public SpaceRepo getSpaceRepo() {
@@ -40,5 +38,9 @@ public class DataConfig {
 
     public ReservationRepo getReservationRepo() {
         return reservationRepo;
+    }
+
+    public static DataConfig getInstance() {
+        return instance;
     }
 }

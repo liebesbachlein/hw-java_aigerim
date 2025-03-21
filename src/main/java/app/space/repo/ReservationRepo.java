@@ -1,52 +1,48 @@
 package app.space.repo;
 
-import app.space.model.Reservation;
+import app.space.entity.Entity;
+import app.space.entity.Reservation;
 import app.space.util.DuplicateIdException;
-import app.space.util.annotations.StreamAPI;
+import app.space.util.PersistenceException;
 import app.space.util.matcher.CriteriaMatcher;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ReservationRepo extends PersistentRepo<Reservation> implements Repo<Reservation> {
-    public ReservationRepo(String fileStorage) {
-        super(fileStorage);
+public class ReservationRepo implements Repo<Reservation> {
+    private final Map<Integer, Reservation> reservationMap;
+
+    public ReservationRepo(RepoSource<Reservation> repoSource) {
+        reservationMap = repoSource.getEntityMap();
     }
 
     public Reservation findById(int id) {
-        return super.idToItem.get(id);
+        return reservationMap.get(id);
     }
 
-    @StreamAPI
     public List<Reservation> findByCriteria(CriteriaMatcher<Reservation> matcher) {
-        return super.idToItem.values().stream()
+        return reservationMap.values().stream()
                 .filter(matcher::match)
                 .toList();
     }
 
-    @StreamAPI
     public List<Reservation> getAll() {
-        return super.idToItem.values().stream().toList();
+        return reservationMap.values().stream().toList();
     }
 
-    @StreamAPI
     public Map<Integer, List<Reservation>> getSpaceIdToReservation() {
-        return super.idToItem.values().stream()
+        return reservationMap.values().stream()
                .collect(Collectors.groupingBy(Reservation::getSpaceId));
     }
 
     public Reservation save(Reservation item) throws DuplicateIdException {
-        Reservation res = super.idToItem.putIfAbsent(item.getId(), item);
+        Reservation res = reservationMap.putIfAbsent(item.getId(), item);
         if (res != null) throw new DuplicateIdException(item.getId(), item.getClass());
         return item;
     }
 
     public boolean delete(int id) {
-        if (super.idToItem.remove(id) == null) return false;
+        if (reservationMap.remove(id) == null) return false;
         return true;
-    }
-
-    public int count() {
-        return super.idToItem.size();
     }
 }

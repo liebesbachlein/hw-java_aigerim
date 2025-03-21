@@ -6,6 +6,6 @@ import java.util.Random;
 
 public class IdGenerator {
     public static int generateId() {
-        return new Random().nextInt(900) + 100;
+        return new Random().nextInt(90000) + 10000;
     }
 }

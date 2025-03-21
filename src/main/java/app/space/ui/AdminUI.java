@@ -1,6 +1,6 @@
 package app.space.ui;
 
-import app.space.model.Space;
+import app.space.entity.Space;
 import app.space.service.AdminService;
 import app.space.util.Validator;
 import java.util.Scanner;
@@ -101,7 +101,6 @@ public class AdminUI extends UI {
     }
 
     protected void logOut() {
-        super.storeSession();
         System.out.println("Logged out of Admin!");
     }
 }

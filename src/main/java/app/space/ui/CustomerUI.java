@@ -110,7 +110,6 @@ public class CustomerUI extends UI {
     }
 
     public void logOut() {
-        super.storeSession();
         System.out.println("Logged out of Customer!");
     }
 }

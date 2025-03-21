@@ -1,6 +1,6 @@
 package app.space.service;
 
-import app.space.model.Space;
+import app.space.entity.Space;
 import app.space.repo.ReservationRepo;
 import app.space.repo.SpaceRepo;
 import app.space.util.DuplicateIdException;
@@ -23,10 +23,5 @@ public class AdminService extends Service {
 
     public boolean deleteSpace(int spaceId) {
         return spaceRepo.delete(spaceId);
-    }
-
-    @Override
-    public boolean storeInMemory() {
-        return spaceRepo.persist();
     }
 }

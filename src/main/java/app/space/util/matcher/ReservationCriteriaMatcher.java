@@ -1,5 +1,5 @@
 package app.space.util.matcher;
-import app.space.model.Reservation;
+import app.space.entity.Reservation;
 
 public class ReservationCriteriaMatcher implements CriteriaMatcher<Reservation> {
     private String ownerName;

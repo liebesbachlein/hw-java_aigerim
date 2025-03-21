@@ -9,6 +9,10 @@ out/.idea/
 .idea
 .idea/
 /.idea/
+/target
+target/
+target
+log.txt
 
 
 ### Eclipse ###
@@ -35,3 +39,4 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/target/
