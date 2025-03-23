@@ -1,10 +1,14 @@
 package app.space.repo;
+import app.space.entity.Entity;
 import app.space.util.PersistenceException;
+import lombok.Getter;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersistentRepoSource<T> implements RepoSource<T> {
+@Getter
+public class PersistentRepoSource<T extends Entity> implements RepoSource<T> {
     private final Map<Integer, T> entityMap;
     private final String FILE_STORAGE ;
 
@@ -12,10 +16,6 @@ public class PersistentRepoSource<T> implements RepoSource<T> {
         FILE_STORAGE ="./src/main/resources/" + entityClass.getName();
         entityMap = new HashMap<>();
         initPersistence();
-    }
-
-    public Map<Integer, T> getEntityMap() {
-        return entityMap;
     }
 
     private void initPersistence() throws PersistenceException {

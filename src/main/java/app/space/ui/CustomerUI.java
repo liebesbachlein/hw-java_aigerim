@@ -25,36 +25,36 @@ public class CustomerUI extends UI {
 
     public boolean run() {
         printRules();
-        switch (scanner.nextLine()) {
-            case "0": {
+        return switch (scanner.nextLine()) {
+            case "0" -> {
                 logOut();
-                return false;
+                yield false;
             }
-            case "1": {
+            case "1" -> {
                 printSpacesWithAvailability();
-                return true;
+                yield true;
             }
-            case "2": {
+            case "2" -> {
                 super.printCalendar();
-                return true;
+                yield true;
             }
-            case "3": {
+            case "3" -> {
                 createReservation();
-                return true;
+                yield true;
             }
-            case "4": {
+            case "4" -> {
                 cancelReservation();
-                return true;
+                yield true;
             }
-            case "5": {
+            case "5" -> {
                 super.printReservations();
-                return true;
+                yield true;
             }
-            default: {
+            default -> {
                 System.out.println("Invalid command.");
-                return true;
+                yield true;
             }
-        }
+        };
     }
 
     private void createReservation() {
@@ -73,8 +73,13 @@ public class CustomerUI extends UI {
         String errorMessage = validateReservationInput(name, spaceId, date, startHour, endHour);
 
         if(errorMessage.isBlank()) {
-            if (customerService.saveReservation
-                    (name, Integer.parseInt(spaceId), Integer.parseInt(date), Integer.parseInt(startHour), Integer.parseInt(endHour)) != null) {
+            if (customerService.saveReservation(
+                    name,
+                    Integer.parseInt(spaceId),
+                    Integer.parseInt(date),
+                    Integer.parseInt(startHour),
+                    Integer.parseInt(endHour))
+                    .isPresent()) {
                 System.out.println("New reservation created!");
             } else {
                 System.out.println("(!) Space with such ID not found or it was already reserved for this time slot. Or other error occurred");
@@ -85,16 +90,13 @@ public class CustomerUI extends UI {
     }
 
     private String validateReservationInput(String name, String spaceId, String date, String startHour, String endHour) {
-        StringBuilder errorMessage = new StringBuilder();
-
-        return errorMessage
-                .append(Validator.onName(name))
-                .append(System.lineSeparator())
-                .append(Validator.onId(spaceId))
-                .append(System.lineSeparator())
-                .append(Validator.onDateNumber(date))
-                .append(System.lineSeparator())
-                .append(Validator.onStartEndHours(startHour, endHour)).toString();
+        return Validator.onName(name) +
+                System.lineSeparator() +
+                Validator.onId(spaceId) +
+                System.lineSeparator() +
+                Validator.onDateNumber(date) +
+                System.lineSeparator() +
+                Validator.onStartEndHours(startHour, endHour);
     }
 
     private void cancelReservation() {

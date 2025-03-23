@@ -49,8 +49,8 @@ public abstract class UI {
                     break;
                 }
 
-                if (date > 9) out.append("\s\s" + date + "\s\s\s");
-                else out.append("\s\s\s" + date + "\s\s\s");
+                if (date > 9) out.append("\s\s").append(date).append("\s\s\s");
+                else out.append("\s\s\s").append(date).append("\s\s\s");
             }
             out.append(System.lineSeparator());
         }
@@ -61,10 +61,13 @@ public abstract class UI {
         StringBuilder out = new StringBuilder();
         for (Space space : service.getAllSpaces()) {
             for (Reservation reservation : service.getReservationsBySpaceId(space.getId())) {
-                out.append(
-                        "(!) Reserved on " + reservation.getDate()
-                        + " from " + reservation.getStartHour() + ":00 to "
-                        + reservation.getEndHour() + ":00.")
+                out.append("(!) Reserved on ")
+                        .append(reservation.getDate())
+                        .append(" from ")
+                        .append(reservation.getStartHour())
+                        .append(":00 to ")
+                        .append(reservation.getEndHour())
+                        .append(":00.")
                         .append(System.lineSeparator());
             }
 

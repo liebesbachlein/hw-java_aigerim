@@ -5,6 +5,7 @@ import app.space.util.matcher.CriteriaMatcher;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class SpaceRepo implements Repo<Space> {
     private final Map<Integer, Space> spaceMap;
@@ -13,8 +14,8 @@ public class SpaceRepo implements Repo<Space> {
         spaceMap = repoSource.getEntityMap();
     }
 
-    public Space findById(int id) {
-        return spaceMap.get(id);
+    public Optional<Space> findById(int id) {
+        return Optional.ofNullable(spaceMap.get(id));
     }
 
     public List<Space> getAll() {

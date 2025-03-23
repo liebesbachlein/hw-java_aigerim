@@ -14,19 +14,19 @@ public class SpaceCriteriaMatcher implements CriteriaMatcher<Space> {
         endPrice = builder.endPrice;
     }
 
-    public boolean matchName(String name) {
+    private boolean matchName(String name) {
         return this.name == null || this.name.equals(name);
     }
 
-    public boolean matchStartPriceLoose(int startPrice) {
+    private boolean matchStartPriceLoose(int startPrice) {
         return this.startPrice == -1 || this.startPrice >= startPrice;
     }
 
-    public boolean matchEndPriceLoose(int endPrice) {
+    private boolean matchEndPriceLoose(int endPrice) {
         return this.endPrice == -1 || this.endPrice <= endPrice;
     }
 
-    public boolean matchType(Space.Type type) {
+    private boolean matchType(Space.Type type) {
         return this.type == null || this.type == type;
     }
 

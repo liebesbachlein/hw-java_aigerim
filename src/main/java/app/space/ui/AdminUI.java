@@ -3,6 +3,8 @@ package app.space.ui;
 import app.space.entity.Space;
 import app.space.service.AdminService;
 import app.space.util.Validator;
+
+import java.util.Optional;
 import java.util.Scanner;
 
 public class AdminUI extends UI {
@@ -15,32 +17,32 @@ public class AdminUI extends UI {
 
     public boolean run() {
         printRules();
-        switch (scanner.nextLine()) {
-            case "0": {
+        return switch (scanner.nextLine()) {
+            case "0" -> {
                 logOut();
-                return false;
+                yield false;
             }
-            case "1": {
+            case "1" -> {
                 super.printSpacesWithAvailability();
-                return true;
+                yield true;
             }
-            case "2": {
+            case "2" -> {
                 super.printCalendar();
-                return true;
+                yield true;
             }
-            case "3": {
+            case "3" -> {
                 createSpace();
-                return true;
+                yield true;
             }
-            case "4": {
+            case "4" -> {
                 removeSpace();
-                return true;
+                yield true;
             }
-            default: {
+            default -> {
                 System.out.println("Invalid command.");
-                return true;
+                yield true;
             }
-        }
+        };
     }
 
     public void printRules() {
@@ -62,7 +64,7 @@ public class AdminUI extends UI {
         String errorMessage = validateSpaceObjectInput(name, price, type);
 
         if(errorMessage.isBlank()) {
-            Space newSpace = adminService.saveSpace(
+            Optional<Space> newSpace = adminService.saveSpace(
                     switch(type.toLowerCase()) {
                         case "private" -> Space.Type.PRIVATE;
                         case "room" -> Space.Type.ROOM;
@@ -70,7 +72,7 @@ public class AdminUI extends UI {
                     },
                     name,
                     Integer.parseInt(price));
-            if(newSpace != null) System.out.println("New space added!");
+            if(newSpace.isPresent()) System.out.println("New space added!");
             else System.out.println("Space wasn't added!");
         } else {
             System.out.print(errorMessage);
@@ -78,14 +80,11 @@ public class AdminUI extends UI {
     }
 
     private String validateSpaceObjectInput(String name, String price, String type) {
-        StringBuilder errorMessage = new StringBuilder();
-
-        return errorMessage
-                .append(Validator.onName(name))
-                .append(System.lineSeparator())
-                .append(Validator.onPrice(price))
-                .append(System.lineSeparator())
-                .append(Validator.onSpaceType(type)).toString();
+        return Validator.onName(name) +
+                System.lineSeparator() +
+                Validator.onPrice(price) +
+                System.lineSeparator() +
+                Validator.onSpaceType(type);
     }
 
     private void removeSpace() {

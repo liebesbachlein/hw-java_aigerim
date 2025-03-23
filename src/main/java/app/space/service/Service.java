@@ -40,51 +40,24 @@ public class Service {
     public List<Reservation> getReservationsByDate(int date) {
         ReservationCriteriaMatcher matcher = new ReservationCriteriaMatcher
                 .ReservationCriteriaMatcherBuilder()
-                .startDate(date)
-                .endDate(date)
+                .date(date)
                 .build();
 
         return reservationRepo.findByCriteria(matcher);
     }
 
-    public List<Space> getSpacesByAvailabilityAndPrice(
-            int startDate, int endDate, int startHour, int endHour, int startPrice, int endPrice) {
-        ReservationCriteriaMatcher resMatcher = new ReservationCriteriaMatcher
-                .ReservationCriteriaMatcherBuilder()
-                .startDate(startDate)
-                .endDate(endDate)
-                .startHour(startHour)
-                .endHour(endHour)
-                .build();
-
-        SpaceCriteriaMatcher priceMatcher = new SpaceCriteriaMatcher
-                .SpaceCriteriaMatcherBuilder()
-                .startPrice(startPrice)
-                .endPrice(endPrice)
-                .build();
-
-        List<Space> bookedSpaces = reservationRepo.findByCriteria(resMatcher).stream()
-                .map(e -> e.getSpace()).toList();
-
-        Predicate<Space> isSpaceAvailable = s -> bookedSpaces.contains(s);
-
-        return spaceRepo.getAll().stream().filter(isSpaceAvailable).filter(priceMatcher::match).toList();
-    }
-
-    public Space checkSpaceAvailability(int spaceId, int date, int startHour, int endHour) {
+    public Optional<Space> checkSpaceAvailability(int spaceId, int date, int startHour, int endHour) {
         ReservationCriteriaMatcher matcher = new ReservationCriteriaMatcher
                 .ReservationCriteriaMatcherBuilder()
                 .spaceId(spaceId)
-                .startDate(date)
-                .endDate(date)
-                .startHour(startHour)
-                .endHour(endHour)
+                .date(date)
+                .hours(startHour, endHour)
                 .build();
 
         Optional<Reservation> res = reservationRepo.findByCriteria(matcher).stream().findAny();
 
         if (res.isPresent()) {
-            return null;
+            return Optional.empty();
         } else {
             return spaceRepo.findById(spaceId);
         }
