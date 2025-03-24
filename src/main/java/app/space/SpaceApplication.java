@@ -1,8 +1,10 @@
 package app.space;
 
-import app.space.config.DataConfig;
+import app.space.config.DBConfig;
 import app.space.config.IOConfig;
 import app.space.config.LoggingConfig;
+import app.space.repo.ReservationRepo;
+import app.space.repo.SpaceRepo;
 import app.space.ui.AdminUI;
 import app.space.ui.UI;
 import app.space.ui.CustomerUI;
@@ -19,18 +21,20 @@ public class SpaceApplication {
     private final AdminUI adminUI;
     private final CustomerUI customerUI;
     private final IOConfig ioConfig;
-    private final DataConfig dataConfig;
+    private final DBConfig dbConfig;
     private final LoggingConfig loggingConfig;
     private Role role = Role.NONE;
 
     public SpaceApplication() {
         ioConfig = IOConfig.getInstance();
-        dataConfig = DataConfig.getInstance();
+        dbConfig = DBConfig.getInstance();
         loggingConfig = LoggingConfig.getInstance();
         System.out.println("--- Space App started ---");
+        ReservationRepo reservationRepo = dbConfig.getReservationRepo();
+        SpaceRepo spaceRepo = dbConfig.getSpaceRepo();
 
-        adminUI = new AdminUI(new AdminService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
-        customerUI = new CustomerUI(new CustomerService(dataConfig.getReservationRepo(), dataConfig.getSpaceRepo()), ioConfig.getScanner());
+        adminUI = new AdminUI(new AdminService(reservationRepo, spaceRepo), ioConfig.getScanner());
+        customerUI = new CustomerUI(new CustomerService(reservationRepo, spaceRepo), ioConfig.getScanner());
     }
 
     public void run() {
@@ -56,7 +60,7 @@ public class SpaceApplication {
             }
         }
         ioConfig.getScanner().close();
-        dataConfig.close();
+        dbConfig.close();
         System.out.println("Bye!");
     }
 

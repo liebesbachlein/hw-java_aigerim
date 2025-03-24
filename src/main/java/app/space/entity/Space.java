@@ -1,45 +1,28 @@
 package app.space.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Getter
-public class Space extends Entity implements Serializable {
-    public enum Type {
-        OPEN,
-        PRIVATE,
-        ROOM
-    }
+@ToString
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class Space extends Entity {
+    private int id;
+    private final String name;
+    private final int price;
+    public final static String tableName = "spaces";
 
-    private String name;
-    private Type type;
-    private int price;
-
-    public Space(String name, Type type, int price) {
-        this.name = name;
-        this.type = type;
-        this.price = price;
-    }
-
-    public Space(int id, String name, Type type, int price) {
-        super(id);
-        this.name = name;
-        this.type = type;
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Space{" +
-                "id=" + getId() +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", price=" + price +
-                '}';
+    public static String migration() {
+        return //"DROP TABLE IF EXISTS `spaces`;\n" +
+                "CREATE TABLE IF NOT EXISTS `spaces` (\n" +
+                "  `id` int NOT NULL AUTO_INCREMENT,\n" +
+                "  `name` varchar(64) NOT NULL,\n" +
+                "  `price` int NOT NULL,\n" +
+                "  PRIMARY KEY (`id`),\n" +
+                "  UNIQUE KEY `name_UNIQUE` (`name`)\n" +
+                ") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;";
     }
 }
 

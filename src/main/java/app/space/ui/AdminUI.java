@@ -27,14 +27,10 @@ public class AdminUI extends UI {
                 yield true;
             }
             case "2" -> {
-                super.printCalendar();
-                yield true;
-            }
-            case "3" -> {
                 createSpace();
                 yield true;
             }
-            case "4" -> {
+            case "3" -> {
                 removeSpace();
                 yield true;
             }
@@ -48,28 +44,20 @@ public class AdminUI extends UI {
     public void printRules() {
         System.out.println("\nAdmin Menu: "
                 + "View all spaces — 1, "
-                + "[NEW!] View space occupation calendar — 2, "
-                + "Add space — 3, "
-                + "Remove space — 4, "
+                + "Add space — 2, "
+                + "Remove space — 3, "
                 + "Log out — 0");
     }
 
     private void createSpace() {
-        System.out.println("Enter Name, Price, and Type of a new space (each on a new line).\n"
-                + "Available space types: Open, Private, Room.");
+        System.out.println("Enter Name and Price of a new space (each on a new line).");
 
         String name = scanner.nextLine();
         String price = scanner.nextLine();
-        String type = scanner.nextLine();
-        String errorMessage = validateSpaceObjectInput(name, price, type);
+        String errorMessage = validateSpaceObjectInput(name, price);
 
         if(errorMessage.isBlank()) {
             Optional<Space> newSpace = adminService.saveSpace(
-                    switch(type.toLowerCase()) {
-                        case "private" -> Space.Type.PRIVATE;
-                        case "room" -> Space.Type.ROOM;
-                        default -> Space.Type.OPEN;
-                    },
                     name,
                     Integer.parseInt(price));
             if(newSpace.isPresent()) System.out.println("New space added!");
@@ -79,12 +67,10 @@ public class AdminUI extends UI {
         }
     }
 
-    private String validateSpaceObjectInput(String name, String price, String type) {
+    private String validateSpaceObjectInput(String name, String price) {
         return Validator.onName(name) +
                 System.lineSeparator() +
-                Validator.onPrice(price) +
-                System.lineSeparator() +
-                Validator.onSpaceType(type);
+                Validator.onPrice(price);
     }
 
     private void removeSpace() {

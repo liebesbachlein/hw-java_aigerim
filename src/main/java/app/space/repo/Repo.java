@@ -1,8 +1,8 @@
 package app.space.repo;
 
 import app.space.entity.Entity;
-import app.space.util.DuplicateIdException;
-import app.space.util.matcher.CriteriaMatcher;
+
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,9 +12,7 @@ public interface Repo<T extends Entity>  {
 
      List<T> getAll();
 
-     T save(T item) throws DuplicateIdException;
+     Optional<T> save(T item);
 
      boolean delete(int id);
-
-     List<T> findByCriteria(CriteriaMatcher<T> matcher);
 }

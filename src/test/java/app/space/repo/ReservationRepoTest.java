@@ -1,158 +1,101 @@
 package app.space.repo;
 
+import app.space.config.DBConfig;
+import app.space.config.LoggingConfig;
 import app.space.entity.Reservation;
 import app.space.entity.Space;
-import app.space.util.DuplicateIdException;
-import app.space.util.matcher.CriteriaMatcher;
-import lombok.SneakyThrows;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashMap;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Time;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class ReservationRepoTest {
-    @Mock
-    private DataSource<Reservation> dataSource;
-    private ReservationRepo repo;
-    private Map<Integer, Reservation> map;
+    private static ReservationRepo  reservationRepo;
+    private static List<Space> spaces;
+    private static List<Reservation> reservations;
 
-    @BeforeEach
-    void setMap() {
-        map = new HashMap<Integer, Reservation>();
-        Space space1 = new Space(100,"Cozy", Space.Type.OPEN, 1000);
-        Space space2 = new Space(101,"Nice", Space.Type.ROOM, 1000);
-        Space space3 = new Space(100,"Pretty", Space.Type.OPEN, 1000);
-        Space space4 = new Space(103,"Warm", Space.Type.PRIVATE, 1000);
-        Reservation reservation1 = new Reservation(100, "Aigerim", space1, 1, 14, 15);
-        Reservation reservation2 = new Reservation(101, "Sabina", space2, 2, 14, 15);
-        Reservation reservation3 = new Reservation(102, "Mukhtar", space3, 3, 14, 15);
-        Reservation reservation4 = new Reservation(103, "Aigerim", space4, 4, 14, 15);
-        map.put(100, reservation1);
-        map.put(101, reservation2);
-        map.put(102, reservation3);
-        map.put(103, reservation4);
-        when(dataSource.getEntityMap()).thenReturn(map);
-        repo = new ReservationRepo(dataSource);
+    @BeforeAll
+    static void setup() {
+        DBConfig dbConfig = DBConfig.getInstance();
+        Space space1 = new Space(1,"Cozy Space Test",1000);
+        String s1 = "INSERT INTO `spaces` VALUES (1,'Cozy Space Test',1000);";
+        Space space2 = new Space(2,"Nice Space Test",1000);
+        String s2 = "INSERT INTO `spaces` VALUES (2,'Nice Space Test',1000);";
+        Space space3 = new Space(3,"Kind Space Test",1000);
+        String s3 = "INSERT INTO `spaces` VALUES (3,'Kind Space Test',1000);";
+        Reservation reser1 = new Reservation(1, "me", 1,
+                new Date(2025 - 1900, 7, 12),
+                new Time(13, 0, 0),
+                new Time(14, 0, 0));
+        String r1 = "INSERT INTO `reservations` VALUES (1,'me','2025-08-12','13:00:00','14:00:00',1);";
+        Reservation reser2 = new Reservation(2, "me", 1,
+                new Date(2025 - 1900, 7, 12),
+                new Time(14, 0, 0),
+                new Time(18, 0, 0));
+        String r2 = "INSERT INTO `reservations` VALUES (2,'me','2025-08-12','14:00:00','18:00:00',1);";
+        Reservation reser3 = new Reservation(3, "me", 2,
+                new Date(2025 - 1900, 7, 20),
+                new Time(10, 0, 0),
+                new Time(15, 0, 0));
+        String r3 = "INSERT INTO `reservations` VALUES (3,'me','2025-08-20','10:00:00','15:00:00',2);";
+        Reservation reser4 = new Reservation(4, "me", 2,
+                new Date(2025 - 1900, 7, 20),
+                new Time(18, 0, 0),
+                new Time(21, 0, 0));
+        String r4 = "INSERT INTO `reservations` VALUES (4,'me','2025-08-20','18:00:00','21:00:00',2);";
+        Reservation reser5 = new Reservation(5, "me", 3,
+                new Date(2025 - 1900, 7, 20),
+                new Time(13, 0, 0),
+                new Time(14, 0, 0));
+        String r5 ="INSERT INTO `reservations` VALUES (5,'me','2025-08-20','13:00:00','14:00:00',3);";
+        spaces = Arrays.asList(space1, space2, space3);
+        reservations = Arrays.asList(reser1, reser2, reser3, reser4, reser5);
+
+        String[] list = {s1, s2,  s3, r1, r2, r3, r4, r5};
+
+        for (String item : list) {
+            try(Statement statement = dbConfig.getDbConnection().createStatement()) {
+                statement.execute(item);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        reservationRepo = dbConfig.getReservationRepo();
     }
 
-    @Test
-    void findById_IdExists_OptionalWithEntity() {
-        int id = 100;
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3})
+    void findById_IdExists_OptionalOfReservation(int id) {
+        Optional<Reservation> res = reservationRepo.findById(id);
 
-        Optional<Reservation> item = repo.findById(id);
-
-        assertTrue(item.isPresent());
-        assertEquals(id, item.get().getId());
+        assertTrue(res.isPresent());
+        assertEquals(id, res.get().getId());
     }
 
-    @Test
-    void findByCriteria_AllListItems() {
-        CriteriaMatcher<Reservation> filter = (Reservation res) -> true;
-        List<Reservation> res = repo.findByCriteria(filter);
-
-        assertArrayEquals(map.values().toArray(), res.toArray());
-    }
-
-    @Test
-    void findByCriteria_EmptyList() {
-        CriteriaMatcher<Reservation> filter = (Reservation res) -> false;
-        List<Reservation> res = repo.findByCriteria(filter);
+    @ParameterizedTest
+    @ValueSource(ints = {10, 20, 30})
+    void findById_IdNotExists_OptionalEmpty(int id) {
+        Optional<Reservation> res = reservationRepo.findById(id);
 
         assertTrue(res.isEmpty());
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {100, 101, 103})
-    void findByCriteria_AllListItemsWithSameSpaceId(int spaceId) {
-        CriteriaMatcher<Reservation> filter = (Reservation res) -> res.getSpaceId() == spaceId;
-        List<Reservation> res = repo.findByCriteria(filter);
-
-        assertArrayEquals(map.values().stream().filter(e -> e.getSpaceId() == spaceId).toArray(), res.toArray());
-    }
-
-    @Test
-    void findById_IdNotExists_OptionalWithEmpty() {
-        int id = 555;
-
-        Optional<Reservation> item = repo.findById(id);
-
-        assertTrue(item.isEmpty());
-    }
-
-    @Test
-    void getAll_NonEmptyList() {
-        List<Reservation> res = repo.getAll();
-
-        assertArrayEquals(map.values().toArray(), res.toArray());
-    }
-
-    @Test
-    void getAll_EmptyList() {
-        DataSource<Reservation> newDataSource = mock(DataSource.class);
-        when(newDataSource.getEntityMap()).thenReturn( new HashMap<>());
-        ReservationRepo newRepo = new ReservationRepo(newDataSource);
-
-        List<Reservation> res = newRepo.getAll();
-
-        assertTrue(res.isEmpty());
-        Mockito.verify(newDataSource, times(1)).getEntityMap();
-    }
-
-    @SneakyThrows
-    @Test
-    void save_ItemWithNewId() {
-        Space space = new Space(110,"Cold", Space.Type.PRIVATE, 1000);
-        Reservation reservation = new Reservation(110, "Aigerim", space, 1, 14, 15);
-
-        Reservation res = repo.save(reservation);
-
-        assertEquals(reservation, res);
-    }
-
-    @Test
-    void save_ItemWithDuplicateId_ThrowsException() {
-        //Arrange
-        Space space = new Space(100,"Cold", Space.Type.PRIVATE, 1000);
-        Reservation reservation = new Reservation(100, "Aigerim", space, 1, 14, 15);
-
-        //Act & Assert
-        assertThrows(DuplicateIdException.class, () -> repo.save(reservation));
-    }
-
-    @Test
-    void delete_ExistentItem() {
-        //Act
-        boolean res = repo.delete(100);
-
-        //Assert
-        assertTrue(res);
-    }
-
-    @Test
-    void delete_NonExistentItem() {
-        //Act
-        boolean res = repo.delete(555);
-
-        //Assert
-        assertFalse(res);
-    }
-
-    @AfterEach
-    void verify() {
-        Mockito.verify(dataSource, times(1)).getEntityMap();
+    @ValueSource(ints = {1, 2, 3})
+    void findBySpaceId_SpaceIdExists_ListOfReservations(int spaceId) {
+        Object[] expected = reservations.stream().filter(e -> spaceId == e.getSpaceId()).toArray();
+        List<Reservation> res = reservationRepo.findBySpaceId(spaceId);
+        assertArrayEquals(expected, res.toArray());
     }
 }

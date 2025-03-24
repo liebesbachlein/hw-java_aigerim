@@ -2,6 +2,7 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #7
+Homework #8
 
-Added Tests
+Added JDBC to config/DBConfig
+Added some tests with H2 

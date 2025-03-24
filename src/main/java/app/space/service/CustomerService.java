@@ -4,8 +4,9 @@ import app.space.entity.Reservation;
 import app.space.entity.Space;
 import app.space.repo.ReservationRepo;
 import app.space.repo.SpaceRepo;
-import app.space.util.DuplicateIdException;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.Optional;
 
 public class CustomerService extends Service {
@@ -13,16 +14,11 @@ public class CustomerService extends Service {
         super(reservationRepo, spaceRepo);
     }
 
-    public Optional<Reservation> saveReservation(String ownerName, int spaceId, int date, int startHour, int endHour) {
+    public Optional<Reservation> saveReservation(String ownerName, int spaceId, Date date, Time startHour, Time endHour) {
         Optional<Space> space = checkSpaceAvailability(spaceId, date, startHour, endHour);
         if (space.isPresent()) {
-            try {
-                Reservation reservation = new Reservation(ownerName, space.get(), date, startHour, endHour);
-                reservationRepo.save(reservation);
-                return Optional.of(reservation);
-            } catch (DuplicateIdException e) {
-                System.out.println(e.getMessage());
-            }
+                Reservation reservation = new Reservation(ownerName, space.get().getId(), date, startHour, endHour);
+                return reservationRepo.save(reservation);
         }
 
         return Optional.empty();

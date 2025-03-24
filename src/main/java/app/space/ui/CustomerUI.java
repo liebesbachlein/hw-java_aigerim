@@ -3,6 +3,8 @@ package app.space.ui;
 import app.space.service.CustomerService;
 import app.space.util.Validator;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.Scanner;
 
 public class CustomerUI extends UI {
@@ -16,10 +18,9 @@ public class CustomerUI extends UI {
     public void printRules() {
         System.out.println("\nCustomer Menu: "
                 + "View all spaces — 1, "
-                + "[NEW!] View space occupation calendar — 2, "
-                + "Make reservation — 3, "
-                + "Cancel reservation — 4, "
-                + "View my reservations — 5, "
+                + "Make reservation — 2, "
+                + "Cancel reservation — 3, "
+                + "View my reservations — 4, "
                 + "Log out — 0");
     }
 
@@ -35,18 +36,14 @@ public class CustomerUI extends UI {
                 yield true;
             }
             case "2" -> {
-                super.printCalendar();
-                yield true;
-            }
-            case "3" -> {
                 createReservation();
                 yield true;
             }
-            case "4" -> {
+            case "3" -> {
                 cancelReservation();
                 yield true;
             }
-            case "5" -> {
+            case "4" -> {
                 super.printReservations();
                 yield true;
             }
@@ -73,12 +70,14 @@ public class CustomerUI extends UI {
         String errorMessage = validateReservationInput(name, spaceId, date, startHour, endHour);
 
         if(errorMessage.isBlank()) {
-            if (customerService.saveReservation(
-                    name,
-                    Integer.parseInt(spaceId),
-                    Integer.parseInt(date),
-                    Integer.parseInt(startHour),
-                    Integer.parseInt(endHour))
+            Date newDate = new Date(2025 - 1900, 7, Integer.parseInt(date));
+            Time newStartHour = new Time(Integer.parseInt(startHour), 0, 0);
+            Time newEndHour = new Time(Integer.parseInt(endHour), 0, 0);
+
+            if (customerService.saveReservation(name,
+                            Integer.parseInt(spaceId),
+                            newDate,
+                            newStartHour, newEndHour)
                     .isPresent()) {
                 System.out.println("New reservation created!");
             } else {
