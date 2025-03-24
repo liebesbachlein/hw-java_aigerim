@@ -4,10 +4,10 @@ import app.space.entity.Entity;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NonPersistentRepoSource<T extends Entity> implements RepoSource<T> {
+public class NonPersistentDataSource<T extends Entity> implements DataSource<T> {
     private final Map<Integer, T> entityMap;
 
-    public NonPersistentRepoSource() {
+    public NonPersistentDataSource() {
         entityMap = new HashMap<>();
     }
 

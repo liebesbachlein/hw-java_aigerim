@@ -3,9 +3,11 @@ package app.space.entity;
 import app.space.util.IdGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Entity {
+public class Entity implements Serializable {
     private int id;
     public Entity() {
         id = IdGenerator.generateId();

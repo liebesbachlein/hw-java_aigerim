@@ -8,7 +8,6 @@ import lombok.ToString;
 import java.io.Serializable;
 
 @Getter
-@ToString
 public class Space extends Entity implements Serializable {
     public enum Type {
         OPEN,
@@ -31,6 +30,16 @@ public class Space extends Entity implements Serializable {
         this.name = name;
         this.type = type;
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Space{" +
+                "id=" + getId() +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", price=" + price +
+                '}';
     }
 }
 

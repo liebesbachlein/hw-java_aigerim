@@ -5,7 +5,6 @@ import lombok.*;
 import java.io.Serializable;
 
 @Getter
-@ToString
 public class Reservation extends Entity implements Serializable {
     private String ownerName;
     private Space space;
@@ -32,5 +31,17 @@ public class Reservation extends Entity implements Serializable {
 
     public int getSpaceId() {
         return space.getId();
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + getId() +
+                ", ownerName='" + ownerName + '\'' +
+                ", space=" + space +
+                ", date=" + date +
+                ", startHour=" + startHour +
+                ", endHour=" + endHour +
+                '}';
     }
 }
