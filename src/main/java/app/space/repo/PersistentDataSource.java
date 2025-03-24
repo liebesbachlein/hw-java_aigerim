@@ -8,11 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class PersistentRepoSource<T extends Entity> implements RepoSource<T> {
+public class PersistentDataSource<T extends Entity> implements DataSource<T> {
     private final Map<Integer, T> entityMap;
     private final String FILE_STORAGE ;
 
-    public PersistentRepoSource(Class entityClass) throws PersistenceException {
+    public PersistentDataSource(Class entityClass) throws PersistenceException {
         FILE_STORAGE ="./src/main/resources/" + entityClass.getName();
         entityMap = new HashMap<>();
         initPersistence();

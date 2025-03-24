@@ -4,32 +4,31 @@ import app.space.entity.Reservation;
 import app.space.entity.Space;
 import app.space.repo.*;
 import app.space.util.PersistenceException;
-import lombok.Getter;
 
 
 public class DataConfig {
     private static final DataConfig instance = new DataConfig();
     private final SpaceRepo spaceRepo;
     private final ReservationRepo reservationRepo;
-    private RepoSource<Space> spaceRepoSource;
-    private RepoSource<Reservation> reservationRepoSource;
+    private DataSource<Space> spaceDataSource;
+    private DataSource<Reservation> reservationDataSource;
 
     private DataConfig() {
        try {
-           spaceRepoSource = new PersistentRepoSource<Space>(Space.class);
-           reservationRepoSource = new PersistentRepoSource<Reservation>(Reservation.class);
+           spaceDataSource = new PersistentDataSource<Space>(Space.class);
+           reservationDataSource = new PersistentDataSource<Reservation>(Reservation.class);
         } catch (PersistenceException ex) {
            System.out.println(ex.getMessage());
-           spaceRepoSource = new NonPersistentRepoSource<>();
-           reservationRepoSource = new NonPersistentRepoSource<>();
+           spaceDataSource = new NonPersistentDataSource<>();
+           reservationDataSource = new NonPersistentDataSource<>();
         }
-        spaceRepo = new SpaceRepo(spaceRepoSource);
-        reservationRepo = new ReservationRepo(reservationRepoSource);
+        spaceRepo = new SpaceRepo(spaceDataSource);
+        reservationRepo = new ReservationRepo(reservationDataSource);
     }
 
     public void close() {
-        spaceRepoSource.close();
-        reservationRepoSource.close();
+        spaceDataSource.close();
+        reservationDataSource.close();
     }
 
     public SpaceRepo getSpaceRepo() {

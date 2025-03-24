@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 public class SpaceRepoTest {
     @Mock
-    private RepoSource<Space> repoSource;
+    private DataSource<Space> dataSource;
     private SpaceRepo repo;
     private Map<Integer, Space> map;
 
@@ -39,8 +39,8 @@ public class SpaceRepoTest {
         map.put(101, space2);
         map.put(102, space3);
         map.put(103, space4);
-        when(repoSource.getEntityMap()).thenReturn(map);
-        repo = new SpaceRepo(repoSource);
+        when(dataSource.getEntityMap()).thenReturn(map);
+        repo = new SpaceRepo(dataSource);
     }
 
     @Test
@@ -80,16 +80,16 @@ public class SpaceRepoTest {
     @Test
     void getAll_EmptyList() {
         //Arrange
-        RepoSource<Space> newRepoSource = mock(RepoSource.class);
-        when(newRepoSource.getEntityMap()).thenReturn( new HashMap<>());
-        SpaceRepo newRepo = new SpaceRepo(newRepoSource);
+        DataSource<Space> newDataSource = mock(DataSource.class);
+        when(newDataSource.getEntityMap()).thenReturn( new HashMap<>());
+        SpaceRepo newRepo = new SpaceRepo(newDataSource);
 
         //Act
         List<Space> list = newRepo.getAll();
 
         //Assert
         assertTrue(list.isEmpty());
-        Mockito.verify(newRepoSource, times(1)).getEntityMap();
+        Mockito.verify(newDataSource, times(1)).getEntityMap();
     }
 
     @SneakyThrows
@@ -134,6 +134,6 @@ public class SpaceRepoTest {
 
     @AfterEach
     void verify() {
-        Mockito.verify(repoSource, times(1)).getEntityMap();
+        Mockito.verify(dataSource, times(1)).getEntityMap();
     }
 }

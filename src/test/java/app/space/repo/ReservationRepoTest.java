@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ReservationRepoTest {
     @Mock
-    private RepoSource<Reservation> repoSource;
+    private DataSource<Reservation> dataSource;
     private ReservationRepo repo;
     private Map<Integer, Reservation> map;
 
@@ -46,8 +45,8 @@ class ReservationRepoTest {
         map.put(101, reservation2);
         map.put(102, reservation3);
         map.put(103, reservation4);
-        when(repoSource.getEntityMap()).thenReturn(map);
-        repo = new ReservationRepo(repoSource);
+        when(dataSource.getEntityMap()).thenReturn(map);
+        repo = new ReservationRepo(dataSource);
     }
 
     @Test
@@ -103,14 +102,14 @@ class ReservationRepoTest {
 
     @Test
     void getAll_EmptyList() {
-        RepoSource<Reservation> newRepoSource = mock(RepoSource.class);
-        when(newRepoSource.getEntityMap()).thenReturn( new HashMap<>());
-        ReservationRepo newRepo = new ReservationRepo(newRepoSource);
+        DataSource<Reservation> newDataSource = mock(DataSource.class);
+        when(newDataSource.getEntityMap()).thenReturn( new HashMap<>());
+        ReservationRepo newRepo = new ReservationRepo(newDataSource);
 
         List<Reservation> res = newRepo.getAll();
 
         assertTrue(res.isEmpty());
-        Mockito.verify(newRepoSource, times(1)).getEntityMap();
+        Mockito.verify(newDataSource, times(1)).getEntityMap();
     }
 
     @SneakyThrows
@@ -154,6 +153,6 @@ class ReservationRepoTest {
 
     @AfterEach
     void verify() {
-        Mockito.verify(repoSource, times(1)).getEntityMap();
+        Mockito.verify(dataSource, times(1)).getEntityMap();
     }
 }

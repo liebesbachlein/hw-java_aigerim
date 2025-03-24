@@ -10,8 +10,8 @@ import java.util.Optional;
 public class SpaceRepo implements Repo<Space> {
     private final Map<Integer, Space> spaceMap;
 
-    public SpaceRepo(RepoSource<Space> repoSource) {
-        spaceMap = repoSource.getEntityMap();
+    public SpaceRepo(DataSource<Space> dataSource) {
+        spaceMap = dataSource.getEntityMap();
     }
 
     public Optional<Space> findById(int id) {

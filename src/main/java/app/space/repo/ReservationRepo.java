@@ -8,8 +8,8 @@ import java.util.*;
 public class ReservationRepo implements Repo<Reservation> {
     private final Map<Integer, Reservation> reservationMap;
 
-    public ReservationRepo(RepoSource<Reservation> repoSource) {
-        reservationMap = repoSource.getEntityMap();
+    public ReservationRepo(DataSource<Reservation> dataSource) {
+        reservationMap = dataSource.getEntityMap();
     }
 
     public Optional<Reservation> findById(int id) {
