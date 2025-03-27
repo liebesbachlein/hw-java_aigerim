@@ -2,7 +2,6 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #8
+Homework #9
 
-Added JDBC to config/DBConfig
-Added some tests with H2 
+Added JPA & Hibernate

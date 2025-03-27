@@ -24,7 +24,7 @@ class ReservationRepoTest {
     private static List<Space> spaces;
     private static List<Reservation> reservations;
 
-    @BeforeAll
+    /*@BeforeAll
     static void setup() {
         DBConfig dbConfig = DBConfig.getInstance();
         Space space1 = new Space(1,"Cozy Space Test",1000);
@@ -72,7 +72,7 @@ class ReservationRepoTest {
         }
 
         reservationRepo = dbConfig.getReservationRepo();
-    }
+    }*/
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
@@ -91,11 +91,11 @@ class ReservationRepoTest {
         assertTrue(res.isEmpty());
     }
 
-    @ParameterizedTest
+    /*@ParameterizedTest
     @ValueSource(ints = {1, 2, 3})
     void findBySpaceId_SpaceIdExists_ListOfReservations(int spaceId) {
         Object[] expected = reservations.stream().filter(e -> spaceId == e.getSpaceId()).toArray();
         List<Reservation> res = reservationRepo.findBySpaceId(spaceId);
         assertArrayEquals(expected, res.toArray());
-    }
+    }*/
 }

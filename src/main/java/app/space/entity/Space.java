@@ -1,28 +1,28 @@
 package app.space.entity;
 
+import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@ToString
-@RequiredArgsConstructor
+@Entity
+@Table(name = "spaces")
+@Data
 @AllArgsConstructor
-public class Space extends Entity {
+@NoArgsConstructor
+public class Space {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private final String name;
-    private final int price;
-    public final static String tableName = "spaces";
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    private int price;
 
-    public static String migration() {
-        return //"DROP TABLE IF EXISTS `spaces`;\n" +
-                "CREATE TABLE IF NOT EXISTS `spaces` (\n" +
-                "  `id` int NOT NULL AUTO_INCREMENT,\n" +
-                "  `name` varchar(64) NOT NULL,\n" +
-                "  `price` int NOT NULL,\n" +
-                "  PRIMARY KEY (`id`),\n" +
-                "  UNIQUE KEY `name_UNIQUE` (`name`)\n" +
-                ") ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;";
+    public Space(String name, int price) {
+        this.name = name;
+        this.price = price;
     }
 }
 

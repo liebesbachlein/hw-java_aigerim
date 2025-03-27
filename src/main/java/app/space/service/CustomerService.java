@@ -17,7 +17,7 @@ public class CustomerService extends Service {
     public Optional<Reservation> saveReservation(String ownerName, int spaceId, Date date, Time startHour, Time endHour) {
         Optional<Space> space = checkSpaceAvailability(spaceId, date, startHour, endHour);
         if (space.isPresent()) {
-                Reservation reservation = new Reservation(ownerName, space.get().getId(), date, startHour, endHour);
+                Reservation reservation = new Reservation(ownerName, space.get(), date, startHour, endHour);
                 return reservationRepo.save(reservation);
         }
 

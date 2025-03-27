@@ -1,13 +1,11 @@
 package app.space.repo;
 
-import app.space.entity.Entity;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 
-public interface Repo<T extends Entity>  {
+public interface Repo<T>  {
      Optional<T> findById(int id);
 
      List<T> getAll();

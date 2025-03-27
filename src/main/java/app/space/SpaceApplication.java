@@ -21,17 +21,16 @@ public class SpaceApplication {
     private final AdminUI adminUI;
     private final CustomerUI customerUI;
     private final IOConfig ioConfig;
-    private final DBConfig dbConfig;
     private final LoggingConfig loggingConfig;
     private Role role = Role.NONE;
 
     public SpaceApplication() {
         ioConfig = IOConfig.getInstance();
-        dbConfig = DBConfig.getInstance();
+        new DBConfig();
         loggingConfig = LoggingConfig.getInstance();
         System.out.println("--- Space App started ---");
-        ReservationRepo reservationRepo = dbConfig.getReservationRepo();
-        SpaceRepo spaceRepo = dbConfig.getSpaceRepo();
+        ReservationRepo reservationRepo = new ReservationRepo();
+        SpaceRepo spaceRepo = new SpaceRepo();
 
         adminUI = new AdminUI(new AdminService(reservationRepo, spaceRepo), ioConfig.getScanner());
         customerUI = new CustomerUI(new CustomerService(reservationRepo, spaceRepo), ioConfig.getScanner());
@@ -60,7 +59,7 @@ public class SpaceApplication {
             }
         }
         ioConfig.getScanner().close();
-        dbConfig.close();
+        DBConfig.close();
         System.out.println("Bye!");
     }
 
