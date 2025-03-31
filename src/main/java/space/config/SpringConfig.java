@@ -26,7 +26,7 @@ public class SpringConfig {
         dataSource.setDriverClassName("org.postgresql.Driver");
         dataSource.setUrl("jdbc:postgresql://localhost:5432/cowork");
         dataSource.setUsername("postgres");
-        dataSource.setPassword("yaoi");
+        dataSource.setPassword("postgres");
         return dataSource;
     }
 
@@ -46,5 +46,10 @@ public class SpringConfig {
         factoryBean.setJpaProperties(jpaProperties);
 
         return factoryBean;
+    }
+
+    @Bean
+    public EntityManager entityManager() {
+        return entityManagerFactory().getNativeEntityManagerFactory().createEntityManager();
     }
 }

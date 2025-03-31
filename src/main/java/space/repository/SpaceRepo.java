@@ -4,6 +4,7 @@ package space.repository;
 import jakarta.persistence.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import space.entity.Space;
 import space.util.RepositoryException;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 @Repository
 public class SpaceRepo implements Repo<Space> {
-    @PersistenceContext
+    @Autowired
     private EntityManager em;
 
     public Optional<Space> findById(int id) throws RepositoryException {
@@ -43,36 +44,36 @@ public class SpaceRepo implements Repo<Space> {
         }
     }
 
-    @Transactional
     public Optional<Space> save(Space item) throws RepositoryException {
-       //EntityTransaction transaction = em.getTransaction();
+       EntityTransaction transaction = em.getTransaction();
         try {
-         //   transaction.begin();
+           transaction.begin();
             em.persist(item);
-            //em.flush();
-           // transaction.commit();
+            em.flush();
+            em.clear();
+            transaction.commit();
             return Optional.of(item);
         } catch (Exception e) {
-           // transaction.rollback();
+            transaction.rollback();
             throw new RepositoryException(e.getMessage());
         }
     }
 
-    @Transactional
     public boolean delete(int id) throws RepositoryException {
-        //EntityTransaction transaction = em.getTransaction();
+        EntityTransaction transaction = em.getTransaction();
         try {
-            //transaction.begin();
+            transaction.begin();
             Query deleteParent = em.createQuery("delete from Space where id = :id")
                     .setParameter("id", id);
             Query deleteChildren = em.createQuery("delete from Reservation e where e.space.id = :id").setParameter("id", id);
             deleteChildren.executeUpdate();
             int num = deleteParent.executeUpdate();
             em.flush();
-            //transaction.commit();
+            em.clear();
+            transaction.commit();
             return num > 0;
         } catch (Exception e) {
-            //transaction.rollback();
+            transaction.rollback();
             throw new RepositoryException(e.getMessage());
         }
     }

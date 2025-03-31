@@ -20,7 +20,7 @@ import java.sql.Date;
 
 @Repository
 public class ReservationRepo implements Repo<Reservation> {
-    @PersistenceContext
+    @Autowired
     private EntityManager em;
 
     public Optional<Reservation> findById(int id) throws RepositoryException {
@@ -80,32 +80,34 @@ public class ReservationRepo implements Repo<Reservation> {
     }
     @Transactional
     public Optional<Reservation> save(Reservation item) throws RepositoryException {
-        //EntityTransaction transaction = em.getTransaction();
+        EntityTransaction transaction = em.getTransaction();
         try {
-            //transaction.begin();
+            transaction.begin();
             em.persist(item);
-            //em.flush();
-            //transaction.commit();
+            em.flush();
+            em.clear();
+            transaction.commit();
             return Optional.of(item);
         } catch (Exception e) {
-            //transaction.rollback();
+            transaction.rollback();
             throw new RepositoryException(e.getMessage());
         }
     }
 
     @Transactional
     public boolean delete(int id) throws RepositoryException {
-        //EntityTransaction transaction = em.getTransaction();
+        EntityTransaction transaction = em.getTransaction();
         try {
-            //transaction.begin();
+            transaction.begin();
             Query q = em.createQuery("delete from Reservation where id = :id")
                     .setParameter("id", id);
             int num = q.executeUpdate();
             em.flush();
-            //transaction.commit();
+            em.clear();
+            transaction.commit();
             return num > 0;
         } catch (Exception e) {
-            //transaction.rollback();
+            transaction.rollback();
             throw new RepositoryException(e.getMessage());
         }
     }
