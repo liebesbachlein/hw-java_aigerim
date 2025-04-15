@@ -2,6 +2,7 @@ Java Homeworks
 by
 Aigerim Tuishieva
 
-Homework #10
+Homework on Thymeleaf
 
-Added Spring
+Replaces command-line interface with Thymeleaf
+Added session-based auth (no Spring Security)

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/styles/globals.css}" rel="stylesheet" />
+    <link th:href="@{/styles/variables.css}" rel="stylesheet" />
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+</head>
+<body>
+<div id="app">
+    <main class="page-center-lock page-center-lock--background">
+        <div class="modal">
+            <div class="form">
+                <div class="form__info-wrap">
+                    <h4 class="form__header">
+                        Welcome To Space App!
+                    </h4>
+                    <h5 class="form__info">
+                        In this homework I implemented a very naive session based authentication
+                        using UUID as a session id, along with even more naive EncryptionService,
+                        which works by reversing the order of a password. As a User you can reserve
+                        spaces by selecting suitable hours and cancel the reservations.
+                        As an Admin you can add/delete new spaces.
+                    </h5>
+                </div>
+                <div class="form__bottom">
+                    <div class="form__buttons">
+                        <a th:href="@{/auth/login}" class="button1">Login to profile</a>
+                        <a th:href="@{/auth/register}" class="button1">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

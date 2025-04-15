@@ -1,34 +1,25 @@
 package space.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
-@Table(name = "space")
+@Table(name = "space_type")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level= AccessLevel.PRIVATE)
-public class Space {
+public class SpaceType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
     @Column(unique = true, nullable = false)
     String name;
-
-    @Column(nullable = false)
-    int price;
-
-    // Owning side
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name="type_id", nullable = false)
-    SpaceType type;
 }
-
-
-

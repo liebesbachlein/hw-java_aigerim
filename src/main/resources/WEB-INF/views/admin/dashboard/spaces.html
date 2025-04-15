@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | All Spaces</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/styles/globals.css}" rel="stylesheet" />
+    <link th:href="@{/styles/variables.css}" rel="stylesheet" />
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div id="app" class="page">
+    <div id="modal" class="page-center-lock" style="display: none">
+        <div class="assert-modal modal">
+            <div class="assert-modal__text">
+                <h3 class="assert-modal__title">Are you sure absolutely sure?</h3>
+                <h4 class="assert-modal__subtitle">
+                    This action cannot be undone. This will delete your space.
+                </h4>
+                <div class="assert-modal__buttons">
+                    <button th:onclick="closeDeleteSpaceModal()" class="button1 button1--outlined">Abort</button>
+                    <button th:onclick="deleteSpace()" class="button1">Delete space</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard">
+        <aside class="dashboard-menu">
+            <h3 class="dashboard-menu__name" th:text="${userDetails.name}"></h3>
+            <div class="separator"></div>
+            <a
+                    th:href="@{/admin/dashboard/spaces}"
+                    class="button2 button2--active"
+            >Spaces</a
+            >
+            <a th:href="@{/admin/dashboard/create-space}" class="button2"
+            >Create space</a
+            >
+            <div class="separator"></div>
+            <a th:href="@{/auth/logout}" class="button2">Log out</a>
+            <a th:href="@{/auth/logout-all-devices}" class="button2"
+            >Log out on all devices</a
+            >
+        </aside>
+        <main class="dashboard-main">
+            <h1 class="page-header">Admin Dashboard</h1>
+            <p class="page-info" th:if="${spaceList.isEmpty()}">No spaces</p>
+            <table th:unless="${spaceList.isEmpty()}" id="spaceTable" class="table">
+                <tr class="table__header">
+                    <th
+                            class="table__header-name table__header-space"
+                    >
+                        Space name
+                    </th>
+                    <th
+                            class="table__header-name table__header-date"
+                    >
+                        Type
+                    </th>
+                    <th
+                            class="table__header-name table__header-time"
+                    >
+                        Price
+                    </th>
+                    <th
+                            class="table__header-name table__header-button"
+                    ></th>
+                </tr>
+                <tr th:each="spaceItem: ${spaceList}"  class="table__row">
+                    <td class="table__entry" th:text="${spaceItem.name}"></td>
+                    <td class="table__entry" th:text="${spaceItem.typeName}"></td>
+                    <td class="table__entry" th:text="${spaceItem.price}"></td>
+                    <td class="table__entry">
+                        <div class="table__button_popup">
+                            <div
+                                    class="table__button button1 button1--outlined button1--icon"
+                            >
+                                <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                            d="M7.99992 8.66666C8.36811 8.66666 8.66659 8.36818 8.66659 7.99999C8.66659 7.63181 8.36811 7.33333 7.99992 7.33333C7.63173 7.33333 7.33325 7.63181 7.33325 7.99999C7.33325 8.36818 7.63173 8.66666 7.99992 8.66666Z"
+                                            fill="#09090B"
+                                            stroke="#09090B"
+                                            stroke-width="1.33333"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                    />
+                                    <path
+                                            d="M12.6667 8.66666C13.0349 8.66666 13.3333 8.36818 13.3333 7.99999C13.3333 7.63181 13.0349 7.33333 12.6667 7.33333C12.2985 7.33333 12 7.63181 12 7.99999C12 8.36818 12.2985 8.66666 12.6667 8.66666Z"
+                                            fill="#09090B"
+                                            stroke="#09090B"
+                                            stroke-width="1.33333"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                    />
+                                    <path
+                                            d="M3.33341 8.66666C3.7016 8.66666 4.00008 8.36818 4.00008 7.99999C4.00008 7.63181 3.7016 7.33333 3.33341 7.33333C2.96522 7.33333 2.66675 7.63181 2.66675 7.99999C2.66675 8.36818 2.96522 8.66666 3.33341 8.66666Z"
+                                            fill="#09090B"
+                                            stroke="#09090B"
+                                            stroke-width="1.33333"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                    />
+                                </svg>
+                            </div>
+                            <div class="table__popup">
+                                <button th:onclick="openDeleteSpaceModal([[${spaceItem.id}]])" class="button2">Delete</button>
+
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <a style="width: fit-content;" th:href="@{/admin/dashboard/create-space}" class="button1">Create a space</a>
+        </main>
+    </div>
+</div>
+<script th:inline="javascript">
+    let spaceIdToDelete = -1;
+    const modal = document.getElementById("modal");
+
+    function openDeleteSpaceModal(spaceId) {
+        modal.style.display = "flex";
+        spaceIdToDelete = spaceId
+    }
+
+    function closeDeleteSpaceModal() {
+        modal.style.display = "none";
+        spaceIdToDelete = -1
+    }
+
+    function deleteSpace() {
+        if (spaceIdToDelete != -1) {
+        modal.style.display = "none";
+
+            const url = "/admin/dashboard/space/" + spaceIdToDelete;
+            fetch(url, {method: "DELETE"}).then(() => {window.location = "/admin/dashboard/spaces"});
+        }
+    }
+</script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

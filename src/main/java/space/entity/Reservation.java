@@ -3,40 +3,37 @@ package space.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Table(name = "reservations")
+@Table(name = "reservation")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level= AccessLevel.PRIVATE)
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    int id;
+
+    // Owning side
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    User owner;
+
+    // Owning side
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "space_id", nullable = false)
+    Space space;
 
     @Column(nullable = false)
-    private String ownerName;
-
-    @ManyToOne(cascade = CascadeType.REMOVE)
-    private Space space;
+    LocalDate date;
 
     @Column(nullable = false)
-    private Date date;
-
-    @Column(nullable = false)
-    private Time startHour;
-
-    @Column(nullable = false)
-    private Time endHour;
-
-    public Reservation(String ownerName, Space space, Date date, Time startHour, Time endHour) {
-        this.ownerName = ownerName;
-        this.space = space;
-        this.date = date;
-        this.startHour = startHour;
-        this.endHour = endHour;
-    }
+    LocalTime hour;
 }

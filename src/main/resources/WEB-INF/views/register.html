@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/styles/globals.css}" rel="stylesheet" />
+    <link th:href="@{/styles/variables.css}" rel="stylesheet" />
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+    <title>Login</title>
+</head>
+<body>
+<div id="app">
+    <main class="page-center-lock page-center-lock--background">
+        <div class="modal">
+            <form name="registerForm" action="#" th:action="@{/auth/register}" th:object="${registerInput}" method="post" class="form">
+                <div class="form__info-wrap">
+                    <h4 class="form__header">
+                        Register
+                    </h4>
+                </div>
+                <div class="form__inputs">
+                    <div class="input-wrap">
+                        <label for="name" class="label">Name</label>
+                        <input th:field="*{name}" id="name" name="name" class="input" type="text">
+                        <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}" for="name" class="error-label"></label>
+                    </div>
+                    <div class="input-wrap">
+                        <label for="email" class="label">Email</label>
+                        <input th:field="*{email}" id="email" name="email" class="input" type="email">
+                        <label th:if="${#fields.hasErrors('email')}" th:errors="*{email}" for="email" class="error-label"></label>
+                    </div>
+                    <div class="input-wrap">
+                        <label for="password" class="label">Password</label>
+                        <input th:field="*{password}" id="password" name="password" class="input" type="password">
+                        <label th:if="${#fields.hasErrors('password')}" th:errors="*{password}" for="password"  class="error-label"></label>
+                    </div>
+                </div>
+                <div class="form__bottom">
+                    <div class="form__buttons">
+                        <a th:href="@{/auth/login}" class="button1 button1--outlined">Have account?</a>
+                        <button type="submit" class="button1">Register</button>
+                    </div>
+                    <p th:if="${error}" th:text="${error}" class="error-label">Error</p>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

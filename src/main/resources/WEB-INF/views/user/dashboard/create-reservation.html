@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User | Reserve Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/styles/globals.css}" rel="stylesheet" />
+    <link th:href="@{/styles/variables.css}" rel="stylesheet" />
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div id="app" class="page">
+    <div class="dashboard-alt">
+        <aside class="dashboard-menu">
+            <h3 class="dashboard-menu__name" th:text="${userDetails.name}"></h3>
+            <div class="separator"></div>
+            <a
+                    th:href="@{/user/dashboard/reservations}"
+                    class="button2"
+            >My reservations</a
+            >
+            <a th:href="@{/user/dashboard/create-reservation}" class="button2 button2--active"
+            >Create a reservation</a
+            >
+            <div class="separator"></div>
+            <a th:href="@{/auth/logout}" class="button2">Log out</a>
+        </aside>
+        <main class="dashboard-main">
+            <h1>User Dashboard</h1>
+            <p class="page-info" th:if="${spaceDetails}">
+                Name: <span th:text="${spaceDetails.name}"></span><br>
+                Price: <span th:text="${spaceDetails.price}"></span><br>
+                Type: <span th:text="${spaceDetails.typeName}"></span>
+            </p>
+            <p class="page-info" th:if="${spaceDetails == null}">Pick space and date!</p>
+            <p class="page-info" th:if="${dateError}" th:text="${dateError}"></p>
+            <table th:unless="${spaceDetails == null || dateError != null}" class="table">
+                <tr class="table__header">
+                    <th
+                            class="table__header-name table__header-id"
+                    >
+                        Time
+                    </th>
+                    <th
+                            class="table__header-name table__header-id"
+                            style="padding-left: 24px"
+                    >
+                        Status
+                    </th>
+                </tr>
+                <tr th:each="spaceReservationItem: ${spaceReservationList}" class="table__row">
+                    <td class="table__entry"
+                        th:text="${#temporals.format(spaceReservationItem.hour, 'HH:mm')}"></td>
+                    <td class="table__entry" style="display: flex; justify-content: center;">
+                        <button th:if="${spaceReservationItem.status == T(space.model.ReservationModel.ReservationStatus).AVAILABLE}" class="button3 button3--green" th:onclick="reserveSpace([[${spaceReservationItem}]], [[${spaceDetails}]])">Reserve</button>
+                        <div th:if="${spaceReservationItem.status == T(space.model.ReservationModel.ReservationStatus).UNAVAILABLE}" class="button3  button3--red" style="cursor: default;" >Unavailable</div>
+                        <div th:if="${spaceReservationItem.status == T(space.model.ReservationModel.ReservationStatus).SELECTED}" class="button3  button3--grey" style="cursor: default;" >Selected</div>
+                    </td>
+                </tr>
+            </table>
+        </main>
+        <aside class="dashboard-menu dashboard-menu-alt">
+            <form
+                  class="form" style="width: fit-content">
+                <div class="form__inputs" style="padding-top: 20px">
+                    <div class="input-wrap">
+                        <label for="date" class="label">Date</label>
+                        <input
+                                id="date"
+                                name="date"
+                                class="input"
+                                type="date"
+                                style="padding-right: 12px"
+                        />
+                    </div>
+                    <div class="input-wrap">
+                        <label for="id" class="label">Space</label>
+                        <input
+                                th:if="${spaceDetails}"
+                                id="id"
+                                name="id"
+                                class="input"
+                                type="hidden"
+
+                                th:value="${spaceDetails.id}"
+                        />
+                        <input
+                                th:unless="${spaceDetails}"
+                                id="id"
+                                name="id"
+                                class="input"
+                                type="hidden"
+
+                        />
+                        <div id="selectWrap" class="select-wrap">
+                            <div id="selectButton" class="input select-input">
+                                <span id="selectButtonContent" th:if="${spaceDetails}" th:text="${spaceDetails.name}"></span>
+                                <span id="selectButtonContent" th:unless="${spaceDetails}">Select space</span>
+                                <div class="input-icon">
+                                    <svg
+                                            width="16"
+                                            height="16"
+                                            viewBox="0 0 16 16"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                                d="M4 6.00024L8 10.0002L12 6.00024"
+                                                stroke="#94A3B8"
+                                                stroke-width="1.33333"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            </div>
+                            <ul class="select-option-list">
+                                <li
+                                        th:each="spaceItem: ${spaceList}"
+                                        th:text="${spaceItem.name}"
+                                        th:onclick="selectSpace([[${spaceItem}]])"
+                                        class="select-option-item button2"
+                                ></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="form__bottom" style="width: 100%">
+                    <button type="submit" class="button3 button3--black" style="width: 100%">Find</button>
+                </div>
+            </form>
+        </aside>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    const selectWrap = document.getElementById("selectWrap");
+    const selectWrapQuery = document.querySelector("#selectWrap");
+
+    const dateValue = getParamValue("date");
+
+    if (dateValue) {
+        document.getElementById('date').value = dateValue
+    }
+
+      document
+        .getElementById("selectButton")
+        .addEventListener("click", toggleSpaceTypeList);
+
+      document.addEventListener("click", (e) => {
+        if (selectWrap) {
+          if (selectWrapQuery && selectWrapQuery.contains(e.target)) return;
+          selectWrap.classList.remove("select-wrap--active");
+        }
+      });
+
+      function toggleSpaceTypeList() {
+        if (selectWrap) {
+          selectWrap.classList.toggle("select-wrap--active");
+        }
+      }
+
+      function selectSpace(space) {
+        document.getElementById("id").value = space.id;
+        document.getElementById("selectButtonContent").innerHTML = space.name;
+        toggleSpaceTypeList();
+      }
+
+    function handleSubmit() {
+        const date = document.getElementById("date").value;
+        const id = document.getElementById("id").value;
+        window.location = "/user/dashboard/reserve-space?id=" + id + "date=" + "date";
+    }
+
+    function serializeParams(params) {
+        if (typeof params === 'string') return params
+
+        const serializedParams = new URLSearchParams()
+
+        if (typeof params === 'object') {
+            Object.entries(params).forEach(([property, value]) => {
+                if (value !== null && value !== undefined && typeof value !== 'object') {
+                    serializedParams.append(property, value)
+                }
+            })
+        }
+
+        return serializedParams
+    }
+
+    function getParamValue(param) {
+        const urlParams = new URLSearchParams(window.location.search)
+        if (urlParams.has(param)) return urlParams.get(param) ?? undefined
+        return undefined
+    }
+
+    function replaceUrl(baseUrl, params) {
+        history.replaceState({}, '', baseUrl + '?' + serializeParams(params))
+    }
+
+    function navigateTo(baseUrl, params) {
+        window.location.href = baseUrl + '?' + serializeParams(params)
+    }
+
+    function reserveSpace(reservation, spaceDetails) {
+        if (reservation.status == "AVAILABLE") {
+            const url = "/user/dashboard/create-reservation";
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                  },
+                body: JSON.stringify({
+                    id: 0,
+                    date: getParamValue("date"),
+                    hour: reservation.hour,
+                    space: spaceDetails
+                })
+            }).then(() => {
+                window.location = window.location;
+            })
+        }
+    }
+</script>
+</body>
+</html>

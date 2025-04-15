@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | Create a Space</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+            rel="stylesheet"
+    />
+    <link th:href="@{/styles/globals.css}" rel="stylesheet" />
+    <link th:href="@{/styles/variables.css}" rel="stylesheet" />
+    <link th:href="@{/styles/main.css}" rel="stylesheet" />
+</head>
+<body>
+
+<div id="app" class="page">
+    <div class="dashboard">
+        <aside class="dashboard-menu">
+            <h3 class="dashboard-menu__name" th:text="${userDetails.name}"></h3>
+            <div class="separator"></div>
+            <a th:href="@{/admin/dashboard/spaces}" class="button2">All spaces</a>
+            <a
+                    th:href="@{/admin/dashboard/create-space}"
+                    class="button2 button2--active"
+            >Create a space</a
+            >
+            <div class="separator"></div>
+            <a th:href="@{/auth/logout}" class="button2">Log out</a>
+            <a th:href="@{/auth/logout-all-devices}" class="button2"
+            >Log out on all devices</a
+            >
+        </aside>
+        <main class="dashboard-main">
+            <h1 class="page-header">Admin Dashboard</h1>
+            <div class="modal">
+                <form
+                        name="createSpaceForm"
+                        action="#"
+                        th:action="@{/admin/dashboard/create-space}"
+                        th:object="${spaceInput}"
+                        method="post"
+                        class="form"
+                >
+                    <div class="form__info-wrap">
+                        <h5 class="form__info">
+                            Make sure that the space name is both short and descriptive,
+                            since it has to be unique
+                        </h5>
+                    </div>
+                    <div class="form__inputs">
+                        <div class="input-wrap">
+                            <label for="name" class="label">Name</label>
+                            <input
+                                    th:field="*{name}"
+                                    id="name"
+                                    name="name"
+                                    class="input"
+                                    type="text"
+                            />
+                            <label
+                                    th:if="${#fields.hasErrors('name')}"
+                                    th:errors="*{name}"
+                                    for="name"
+                                    class="error-label"
+                            ></label>
+                        </div>
+                        <div class="input-wrap">
+                            <label for="typeId" class="label">Type</label>
+                            <input
+                                    th:field="*{typeId}"
+                                    id="typeId"
+                                    name="typeId"
+                                    class="input"
+                                    type="hidden"
+                            />
+                            <input
+                                    th:field="*{typeName}"
+                                    id="typeName"
+                                    name="typeName"
+                                    class="input"
+                                    type="hidden"
+                            />
+                            <div id="selectWrap" class="select-wrap">
+                                <div id="selectButton" class="input select-input">
+                                    <span th:if="*{typeName}" id="selectButtonContent" th:text="*{typeName}"></span>
+                                    <span th:unless="*{typeName}" id="selectButtonContent">Select type</span>
+                                    <div class="input-icon">
+                                        <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                    d="M4 6.00024L8 10.0002L12 6.00024"
+                                                    stroke="#94A3B8"
+                                                    stroke-width="1.33333"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                            />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <ul class="select-option-list">
+                                    <li th:each="spaceTypeItem: ${spaceTypeList}" th:text="${spaceTypeItem.name}" th:onclick="selectSpaceType([[${spaceTypeItem}]])" class="select-option-item button2">
+                                    </li>
+                                </ul>
+                            </div>
+                            <label
+                                    th:if="${#fields.hasErrors('typeId')}"
+                                    th:errors="*{typeId}"
+                                    for="typeId"
+                                    class="error-label"
+                            ></label>
+                        </div>
+                        <div class="input-wrap">
+                            <label for="price" class="label">Price</label>
+                            <input
+                                    th:field="*{price}"
+                                    id="price"
+                                    name="type"
+                                    class="input"
+                                    type="text"
+                            />
+                            <label
+                                    th:if="${#fields.hasErrors('price')}"
+                                    th:errors="*{price}"
+                                    for="price"
+                                    class="error-label"
+                            ></label>
+                        </div>
+                    </div>
+                    <div class="form__bottom">
+                        <button type="submit" class="button1">Create a space</button>
+                        <p th:if="${error}" th:text="${error}" class="error-label"></p>
+                        <p th:if="${success}" th:text="${success}" class="label" style="color: var(--green)"></p>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</div>
+<script th:inline="javascript">
+    const selectWrap = document.getElementById("selectWrap");
+      const selectWrapQuery = document.querySelector("#selectWrap");
+
+      document
+        .getElementById("selectButton")
+        .addEventListener("click", toggleSpaceTypeList);
+
+      document.addEventListener("click", (e) => {
+        if (selectWrap) {
+          if (selectWrapQuery && selectWrapQuery.contains(e.target)) return;
+          selectWrap.classList.remove("select-wrap--active");
+        }
+      });
+
+      function toggleSpaceTypeList() {
+        if (selectWrap) {
+          selectWrap.classList.toggle("select-wrap--active");
+        }
+      }
+
+      function selectSpaceType(type) {
+
+        document.getElementById("typeId").value = type.id;
+        document.getElementById("typeName").value = type.name;
+
+        document.getElementById("selectButtonContent").innerHTML =
+          type.name;
+        toggleSpaceTypeList();
+      }
+</script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
