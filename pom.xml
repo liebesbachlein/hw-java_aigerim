@@ -32,7 +32,7 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.18.3</version>
         </dependency>
-        <!-- PASSPORT VALIDATION -->
+        <!-- PASSWORD VALIDATION -->
         <dependency>
             <groupId>org.passay</groupId>
             <artifactId>passay</artifactId>
